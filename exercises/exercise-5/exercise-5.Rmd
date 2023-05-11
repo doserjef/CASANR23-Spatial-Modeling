@@ -1,0 +1,228 @@
+---
+title: "Spatially-varying trends in Eastern Wood-pewee occurrence from 2010-2019"
+author: "Andrew O. Finley and Jeffrey W. Doser"
+date: "May 15, 2023"
+output: html_document
+bibliography: [references.bib]
+biblio-style: apalike
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+\newcommand{\bm}{\boldsymbol}
+
+# Introduction
+
+In this exercise, our goal is to fit a spatially-varying coefficient model to assess if there is any spatial variation in a ten-year (2010-2019) occurrence trend of the Eastern Wood-pewee across the eastern US. We will fit a model that explicitly accommodates observational biases that occur when collecting data on many wildlife species (i.e., imperfect detection, or failing to observe a species at a location when it is truly present). The data we use come from the North American Breeding Bird Survey, in which trained volunteers count the number of birds, identified to species, at approximately 3000 locations (called "routes") across North America each year since the 1960s. Here we use presence/absence data from $n = 500$ sites acrosss the eastern US that are within the known distribution of the Eastern Wood-pewee, which are surveyed varying amounts over a ten year period from 2010-2019. At each site during each year it is sampled, we use data from $K = 5$ replicate surveys. We assume the true presence/absence status of the bird at a given location does not change over the 5 replicate surveys, and that any variation in the data across the replicate surveys is related to observational error. In the wildlife ecology literature, this type of zero-inflated mixture model is referred to as an "occupancy model".
+
+We will fit the model using the function `svcTPGOcc()` in the `spOccupancy` package, where the `svc` stands for spatially-varying coefficients, the `T` indicates we're fitting a model that has a temporal dimension to it, `PG` indicates we're using P&oacute;lya-Gamma data augmentation [@polson2013], and `Occ` stands for occupancy model. Below we first load the packages we will use in this example. 
+
+```{r}
+set.seed(111)
+library(spOccupancy)
+library(ggplot2)
+library(sf)
+library(stars)
+```
+
+# Exploratory data analysis
+
+```{r}
+# Load the data and take a look at its structure
+load("eastern-wood-pewee-data.rda")
+str(data.EAWP)
+```
+
+The data list is comprised of four components: 
+
++ `y`: a three-dimensional array with dimensions corresponding to sites, years, and replicate, with each value containing the detection (1) or nondetection (0) of the species during the given survey.
++ `occ.covs`: a list comprised of the covariates that we will include in the process (i.e., occurrence) sub-model 
++ `det.covs`: a list comprised of the covariates that we will include in the observation sub-model.
++ `coords`: a $n \times 2$ matrix of the spatial coordinates 
+
+Next, we generate a couple of maps that show the location of the data points and the proportion of times the species was detected at each location over the time period.
+
+```{r, fig.align = 'center', message = FALSE}
+my.crs <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=km +no_defs"
+coords.sf <- st_as_sf(as.data.frame(data.EAWP$coords),
+		      coords = c("X", "Y"),
+		      crs = my.crs)
+usa <- st_as_sf(maps::map("state", fill = TRUE, plot = FALSE))
+usa.no.states <- st_as_sf(maps::map("usa", fill = TRUE, plot = FALSE))
+# Restrict to east of the 100th meridian
+usa.bbox <- st_bbox(usa)
+usa.bbox[1] <- -100
+usa.bbox <- as.vector(usa.bbox)
+sf_use_s2(FALSE)
+east.us <- st_crop(st_make_valid(usa), xmin = usa.bbox[1], ymin = usa.bbox[2],
+                   xmax = usa.bbox[3], ymax = usa.bbox[4])
+east.us <- east.us %>%
+  st_transform(st_crs(coords.sf))
+coords.sf$raw.prob <- apply(data.EAWP$y, 1, mean, na.rm = TRUE)
+ggplot(coords.sf) +
+    geom_sf(aes(col = raw.prob), size = 2) +
+    scale_color_viridis_c('', option = 'plasma', limits = c(0, 1)) +
+    geom_sf(data = east.us, fill = NA, color=alpha("black", 0.75)) +
+    theme_bw(base_size = 14)
+```
+
+Below, we calculate the average proportion of times the species was observed at an average site each year
+
+```{r, fig.align = 'center'}
+y.prop.by.year <- apply(data.EAWP$y, 2, mean, na.rm = TRUE)
+plot(2010:2019, y.prop.by.year, pch = 19, xlab = 'Year', ylab = 'Average raw occurrence probability')
+```
+
+# Model fitting
+
+We next fit the model with the `svcTPGOcc` function in `spOccupancy`. The arguments are very similar to what we saw with the spatial factor model in the previous exercise. We first specify the priors below
+
+```{r}
+dist.bbs <- dist(data.EAWP$coords)
+low.dist <- quantile(dist.bbs, 0.10)
+max.dist <- max(dist.bbs)
+priors <- list(sigma.sq.ig = list(2, 1), # IG prior for spatial variances
+	       # Informative prior for spatial decay parameters
+	       phi.unif = list(3 / max.dist, 3 / low.dist),
+	       # Normal prior for occurrence coefficients
+	       beta.normal = list(mean = 0, var = 2.72), 
+	       # Normal prior for observational (detection) coefficients
+	       alpha.normal = list(mean = 0, var = 2.72))
+```
+
+Here we will again use an exponential spatial covariance model, so notice that our prior for the spatial decay parameters $\phi$ restricts the effective spatial range to fall between the maximum intersite distance and the 10% quantile of the intersite distances. We use our usual inverse-Gamma prior for the spatial variances and Gaussian priors for the regression coefficients.
+
+Next, we set the initial values and initial tuning parameters for $\phi$ (we again use an Adaptive Metropolis update for these parameters as in the spatial factor model).
+
+
+```{r}
+tuning.list <- list(phi = c(0.6, 0.5))
+inits <- list(phi = c(3 / 500, 3 / 400), sigma.sq = c(5, 0.5), 
+              beta = c(1.5, 0), alpha = 0)
+```
+
+Finally, we are about set to run the model. The function takes two right-sided formulas: one for the process (occurrence) model, and one for the observation (detection) model. Here we solely include a spatially-varying trend in the occurrence portion of the model, while we include a linear and quadratic effect of survey day in the detection model and a separate intercept for each of the ten years. Notice the `svc.cols` argument is used to specify the columns of the design design matrix that we wish to allow to vary over space.
+
+```{r, fig.align = 'center'}
+# MCMC criteria
+n.batch <- 300
+batch.length <- 25
+n.burn <- 5000
+n.thin <- 5
+n.chains <- 1
+
+out <- svcTPGOcc(occ.formula = ~ scale(years), 
+                 det.formula = ~ scale(day) + I(scale(day)^2) + 
+                                 factor(years),
+                 svc.cols = c(1, 2),
+                 data = data.EAWP,
+                 inits = inits,
+                 priors = priors,
+                 n.batch = n.batch,
+                 batch.length = batch.length,
+                 accept.rate = 0.43,
+                 cov.model = "exponential",
+                 tuning = tuning.list,
+                 n.omp.threads = 1,
+                 verbose = TRUE,
+                 NNGP = TRUE,
+                 n.neighbors = 5,
+                 n.report = 30,
+                 n.burn = n.burn,
+                 n.thin = n.thin,
+                 n.chains = n.chains) 
+summary(out)
+plot(out$theta.samples, density = FALSE)
+```
+
+We can use the `getSVCSamples()` function to extract the MCMC samples for the complete spatially-varying coefficient for each coefficient. 
+
+```{r, fig.align = 'center'}
+svc.samples <- getSVCSamples(out)
+str(svc.samples)
+# The first 9 spatially-varying trend estimates
+plot(svc.samples[[2]][, 1:9], density = FALSE)
+```
+
+# Prediction
+
+We will next generate a map of the spatially-varying trend across a 30 x 30 km grid in the eastern US.
+
+```{r}
+load('pred-coordinates.rda')
+# Design "matrix" should be a 3-D array with dimensions corresponding to site, year, and parameter
+X.0 <- array(NA, dim = c(nrow(coords.0), ncol(out$y), dim(out$X)[3]))
+# Intercept
+X.0[, , 1] <- 1
+# Year
+unique.years <- unique(c(data.EAWP$occ.covs$years))
+for (t in 1:ncol(out$y)) {
+  X.0[, t, 2] <- unique.years[t]
+}
+X.0[, , 2] <- (X.0[, , 2] - mean(c(data.EAWP$occ.covs$years))) / sd(c(data.EAWP$occ.covs$years))
+# The t.cols argument specifies that we are predicting for all ten years.
+out.pred <- predict(out, X.0, coords.0, t.cols = 1:10)
+str(out.pred)
+# Get the full spatially-varying coefficients
+svc.pred.samples <- getSVCSamples(out, out.pred)
+str(svc.pred.samples)
+```
+
+Finally, we use the `stars` and `ggplot2` packages to generate a map of the estimated spatially-varying trend across the 30 x 30 m grid. We generate a map of uncertainty by plotting the probability the trend at any given location is greater than 0, and then discretizing this into five bins that illustrate the amount of support for a positive (close to 1) or negative (close to 0) trend.
+
+```{r, message = FALSE, warning = FALSE, fig.align = 'center'}
+plot.df <- data.frame(trend = apply(svc.pred.samples[[2]], 2, mean),
+                      trend.prob.pos = apply(svc.pred.samples[[2]], 2, function(a) mean(a > 0)),
+                      x = coords.0[, 1],
+                      y = coords.0[, 2])
+pred.stars <- st_as_stars(plot.df, dims = c('x', 'y'))
+coords.sf <- st_as_sf(as.data.frame(data.EAWP$coords),
+                      coords = c("X", "Y"),
+                      crs = my.crs)
+usa <- st_as_sf(maps::map("state", fill = TRUE, plot = FALSE))
+usa.no.states <- st_as_sf(maps::map("usa", fill = TRUE, plot = FALSE))
+# Restrict to east of the 100th meridian
+usa.bbox <- st_bbox(usa)
+usa.bbox[1] <- -100
+usa.bbox <- as.vector(usa.bbox)
+sf_use_s2(FALSE)
+# Full data
+east.us <- st_crop(st_make_valid(usa), xmin = usa.bbox[1], ymin = usa.bbox[2],
+                   xmax = usa.bbox[3], ymax = usa.bbox[4])
+east.us <- east.us %>%
+  st_transform(st_crs(coords.sf))
+
+# Map of the mean effect
+ggplot() +
+  geom_stars(data = pred.stars, aes(x = x, y = y, fill = trend), interpolate = FALSE) +
+  geom_sf(data = east.us, alpha = 0, col = 'grey') +
+  scale_fill_gradient2(midpoint = 0, low = '#B2182B', mid = 'white', high = '#2166AC',
+                       na.value = NA) +
+  theme_bw(base_size = 14) +
+  labs(x = "Longitude", y = "Latitude", fill = "", title = 'Eastern Wood-Pewee Trend (2010-2019)') +
+  theme(legend.position = c(0.87, 0.25),
+        legend.background = element_rect(fill = NA),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(size = 18),
+        legend.text = element_text(size = 12))
+
+ggplot() +
+  geom_stars(data = pred.stars, aes(x = x, y = y, fill = trend.prob.pos), interpolate = FALSE) +
+  geom_sf(data = east.us, alpha = 0, col = 'grey') +
+  scale_fill_steps2(midpoint = 0.5, low = '#B2182B', mid = 'white', high = '#2166AC',
+  	               na.value = NA, limits = c(0, 1), n.breaks = 6) +
+  theme_bw(base_size = 14) +
+  labs(x = "Longitude", y = "Latitude", fill = "", title = 'P(trend > 0)') +
+  theme(legend.position = c(0.87, 0.25),
+        legend.background = element_rect(fill = NA),
+        axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.title = element_text(size = 14),
+        plot.title = element_text(size = 18),
+        legend.text = element_text(size = 12))
+
+```
+
+# References {-}

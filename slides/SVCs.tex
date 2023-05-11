@@ -1,0 +1,159 @@
+
+% \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
+
+\input{frontStuff.tex}
+
+\title[]{Application of Spatially-Varying Coefficient Models}
+\input{authors2.tex}
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Spatially-Varying Coefficient Models}
+     \begin{itemize}
+          \item Extension of spatial regression approaches that allow regression coefficients to vary across space, and not just the intercept
+	  \item SVC models are random slopes models, with spatial structure given to the random slopes
+     \end{itemize}
+\end{frame}
+
+
+\begin{frame}{SVC GLMMs}
+    \begin{align*}
+	    y(\bs_i) &\sim f(\mu(\bs_i), \tau) \\
+	    \mu(\bs_i) &= g^{-1}(\eta(\bs_i)) = \bx(\bs_i)^\top \tilde{\bbeta}(\bs_i) \\
+	    \tilde{\beta}_r(\bs_i) &= \beta_r + \text{w}_r(\bs_i) \text{ for each } r = 1, \dots, p
+    \end{align*}
+    \begin{itemize}
+        \item We can model $\textbf{w}(\bm{s}_i)$ using a GP, predictive process, or \red{NNGP}
+        \item We can envision modeling $\textbf{w}(\bm{s}_i)$ in two ways: 
+        \begin{enumerate}
+		\item Multivariate NNGP (see previous forest biomass example) 
+		\item \red{Independent NNGPs}
+        \end{enumerate}
+	\item Here we focus on the latter
+        \item Pros and cons to both approaches, similar to correlations between random slopes and intercepts in mixed models
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Potential benefits of SVC models}
+    \begin{itemize}
+         \item Improved predictive performance
+         \item Tremendous flexibility to accommodate spatial variability in effects
+         \item Hypothesis testing and generation
+         \item Accommodate highly non-linear relationships
+	 \item Model spatial variability in trends over time
+    \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Improved predictive performance}
+\begin{figure}[]
+\begin{center}
+\vskip -5mm
+\subfloat[Observed biomass]{\includegraphics[width=5cm]{../figures/obs-biomass.png}\label{bio-obs}}
+\subfloat[Fitted biomass]{\includegraphics[width=5cm]{../figures/fitted-biomass.png}\label{bio-fitted}}\\  \vskip-2.5mm
+\subfloat[$\beta_0(s)$]{\includegraphics[width=5cm]{../figures/svc-beta0.png}\label{bio-coefs-b0}}
+\subfloat[$\beta_{NDVI}(s)$]{\includegraphics[width=5cm]{../figures/svc-beta1.png}\label{bio-coefs-b1}}\\
+\end{center}
+\label{fig:bio-coefs}
+\end{figure}
+
+
+\end{frame}
+	
+\begin{frame}{More flexibility to accommodate spatial variability in effects}
+
+Gray Catbird occurrence trend across the eastern US from 2000-2019
+
+\begin{center}
+   \includegraphics[width=11cm]{../figures/DKFSWZ22-GRCA-plot.png}
+\end{center}
+\end{frame}
+
+\begin{frame}{Some cautionary notes: (1) Standardization of covariates}
+     \begin{itemize}
+          \item Common recommendation to center and scale covariates is likely not appropriate. Why? \pause
+	  \item Consider a single SVC $\text{w}(\bs_i)$: \pause
+               \begin{itemize}
+		       \item $\text{var}(\text{w}(\bs_i)) = \text{x}^2(\bs_i)\sigma^2 + \tau^2$ \pause
+		       \item $\text{cov}(\text{w}(\bs_i), \text{w}(\bs_j)) = \sigma^2\text{x}(\bs_i)\text{x}(\bs_j)\rho(\mid\bs_i - \bs_j\mid; \phi)$ \pause
+		       \item If x takes both positive and negative values, variance will be high at large and small x values and small around zero. \pause
+		       \item Further, negative covariances can arise, which may drive $\sigma^2$ to be very close to zero. \pause
+               \end{itemize}
+       \item Recommendation following Gelfand et al. (2003) \textit{JASA}: only use positive covariate values. Can lead to identifiability problems.
+       \item For modeling spatially-varying trends, standardiziation is recommended. 
+     \end{itemize}
+\end{frame}
+
+\begin{frame}{Some cautionary notes: (2) Inference}
+	\begin{itemize}
+             \item Estimating multiple GPs simultaneously is difficult.
+	     \item Use caution when making inference from SVC models, particularly with observational data. \pause
+	     \item The model only identifies the product of $\tilde{\beta}(\bs_i)$ and $\text{x}(\bs_i)$. Prediction at $\bs_i$ with a new covariate value (e.g., $\text{x}^\ast(\bm{s}_i)$) may not be appropriate. \pause
+	     \item Recommend plotting spatial maps of SVC effects together with a plot of the covariate vs. the predicted mean for all observed locations
+	     \item Interpretation can be difficult when both the effect and the covariate vary over space. More straightforward with something like a trend.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Effect of max temperature on Bobolink occurrence}
+
+\begin{center}
+   \includegraphics[width=11cm]{../figures/svc-bobolink.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Software}
+
+\begin{itemize}
+    \item \texttt{spBayes}: univariate Gaussian SVC with full GPs
+    \item \texttt{spOccupancy}: univariate Binomial SVC with NNGPs (multivariate on its way)
+    \item \texttt{varycoef}: maximum likelihood Gaussian SVCs (Dambon et al. 2021 \textit{Spatial Stats.})
+    \item \texttt{sdmTMB}: penalized likelihood and Bayesian SVC GLMMs (Anderson et al. 2022 \textit{bioRxiv})
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Exercise: 10-year occurrence trend of Wood Thrush}
+
+\begin{itemize}
+     \item Data come from USGS North American Breeding Bird Survey
+     \item We desire to account for observational biases in detection of the birds (i.e., false negatives).
+     \item Add on an additional observational layer to our hierarchical model
+\end{itemize}
+
+\begin{center}
+   \includegraphics[width=5cm]{../figures/EAWP-data.png}
+\end{center}
+
+\end{frame}
+
+\begin{frame}{Exercise: Process model}
+  \begin{itemize}
+          \item Let $z_t(\bs_i)$ denote the true presence (1) or absence (0) of the species at site $i = 1, \dots, 500$ during year $t = 1, \dots, 10$. \pause
+	  \item If the bird was detected at a site and year, we know $z_t(\bs_i) = 1$. If not, it might be there and we just missed it during the surveys. \pause
+	  \item We model $z_t(\bs_i)$ just as before with a Bernoulli GLM, with a SVC for trend
+          \begin{align*}
+		  z_t(\bs_i) &\sim \text{Bernoulli}(\psi_t(\bs_i)) \\
+		  \text{logit}(\psi_t(\bs_i)) &= \tilde{\beta}_0(\bs_i) + \tilde{\beta}_1(\bs_i) \cdot \text{YEAR}_t
+	  \end{align*}
+          \item $\tilde{\beta}_0(\bm{s}_i)$ and $\tilde{\beta}_1(\bs_i)$ are modeled as independent SVCs with NNGPs
+  \end{itemize}
+
+\end{frame}
+	 
+\begin{frame}{Exercise: Observation model}
+	\begin{itemize}
+	  \item Let $y_{t, k}(\bs_i)$ denote the observed detection (1) or nondetection (0) of the bird at site $i$ during year $t$ and survey $k = 1, \dots, 5$. 
+	  \item We model $y_{t, k}(\bs_i)$ conditional on the true presence/absence of the species $z_t(\bs_i)$
+		  \begin{align*}
+			  y_{t, k}(\bs_i) \mid z_t(\bs_i) &\sim \text{Bernoulli}(p_{i, t, k} \cdot z_t(\bs_i)) \\
+			  \text{logit}(p_{i, t, k}) &= \alpha_{0, t} + \alpha_1 \cdot \text{DAY}_{i, t, k} + \alpha_2 \cdot \text{DAY}^2_{i, t, k}
+		  \end{align*}
+	  \item A key assumption for identifiability is that $z_t(\bs_i)$ does not change across the $5$ replicate surveys at site $i$ during year $t$.
+	\end{itemize}
+\end{frame}
+
+
+\end{document}

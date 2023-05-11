@@ -1,0 +1,354 @@
+---
+title: "Modeling tree distributions across Vermont"
+author: "Andrew O. Finley and Jeffrey W. Doser"
+date: "May 15, 2023"
+output: html_document
+bibliography: [references.bib]
+biblio-style: apalike
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+\newcommand{\bm}{\boldsymbol}
+
+# Introduction
+
+In this execersice, we will model the distributions of the ten most common tree species in Vermont, USA. Our goal is to predict distributions (i.e., probability of occurrence) of the ten species at a fine resolution across the state. We will use data from the US Forest Service Forest Inventory and Analysis (FIA) program, which collects inventory data on forest resources across the US for a variety of applications, such as assessments of current carbon stock and flux, projections of forest change, natural resource planning, and climate change policies. FIA maintains over 300,000 plots across the US for varying objectives, which were selected through a quasi-systematic sampling design [@bechtold2005enhanced]. Here our data set is relatively modest in size, with $m = 10$ species (i.e., responses) and $n = 688$ forest plots. Note a small amount of noise is added to the true spatial location of the forest plots to ensure confidentiality of the locations. As our interest is in modeling tree distributions, we will work with presence/absence data of each species at each site. Because we have a fairly large number of species, we will use a factor modeling dimension reduction approach to jointly model the distributions of each species.
+
+Given our binary response variable, we will fit spatial factor models using a GLMM framwork with a logit link function, employing  data augmentation to yield an efficient MCMC sampler [@polson2013]. We will fit such models with the `sfJSDM` function in the `spOccupancy` R package [@doser2022spoccupancy]. The `sf` stands for spatial factor and the `JSDM` stands for "Joint Species Distribution Model", which is what joint models of species distributions are called in the ecological literature. We first load `spOccupancy` below, as well as a few other packages we will use for generating maps and other summaries of the model
+
+```{r, message = FALSE}
+set.seed(2210)
+library(spOccupancy)
+library(coda)
+library(MCMCvis)
+library(ggplot2)
+library(pals)
+library(sf)
+```
+
+# Exploratory data analysis
+
+The data are stored in an R data file object called `vermont-tree-data.rda`. Reading in this object will load an object called `data.list`.
+
+```{r}
+load("vermont-tree-data.rda")
+# Take a look at the data object
+str(data.list)
+# Look at the species we're modeling
+(sp.names <- dimnames(data.list$y)[[1]])
+```
+
+The data are stored in the format required for `spOccupancy`, which is a list object with the following three components: 
+
++ `y`: an $m \times n$ matrix comprising the observed presence (1) or absence (0) of each of the $m$ species at each of the $n$ spatial locations. 
++ `coords`: an $n \times 2$ matrix of spatial coordinates in a projected coordinate system. Here, the coordinates are specified in Albers Equal Area.
++ `covs`: a $n \times p$ matrix or data frame of potential covariates for use in the model. Here we include a variety of 30-year climate normals that we believe may be useful in explaining variability in the distributions of the ten species across Vermont. These include: (1) `tmax`: maximum temperature; (2) `tmin`: minimum temperature; (3) `prcp`: precipitation; (4) `pet`: potential evapotranspiration; (5) `aet`: actual evapotranspiration; (6) `water_deficit`: climate water deficit; (7) `vpd`: vapor pressure deficit; and (8) `elev`: elevation.
+
+Let's first generate some EDA plots of the observed presence/absence data for each species
+
+```{r, fig.cap = 'Observed presence/absence of the ten species across Vermont', fig.fullwidth = TRUE, fig.align = 'center'}
+m <- length(sp.names)
+n <- nrow(data.list$coords)
+my.crs <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=km +no_defs"
+plot.df <- data.frame(val = c(t(data.list$y)),
+                      x = rep(data.list$coords[, 1], times = m),
+                      y = rep(data.list$coords[, 2], times = m),
+                      species = factor(rep(sp.names, each = n)))
+plot.df$val <- factor(ifelse(plot.df$val == 1, 'Present', 'Absent'))
+plot.sf <- st_as_sf(plot.df, coords = c('x', 'y'), 
+                    crs = my.crs)
+ggplot() +
+  geom_sf(data = plot.sf, aes(col = val), size = 0.5) +
+  scale_color_viridis_d() +
+  theme_bw(base_size = 10) +
+  facet_wrap(~species, nrow = 2) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "")
+```
+
+Now let's take a look at the covariates
+
+```{r, fig.cap = 'Predictor variables (centered and scaled)', fig.fullwidth = TRUE, fig.align = 'center'}
+cov.names <- colnames(data.list$covs)
+p.cov <- length(cov.names)
+# Standardize covariates for plotting
+covs.std <- apply(data.list$covs, 2, scale)
+plot.df <- data.frame(val = c(covs.std),
+                      x = rep(data.list$coords[, 1], times = p.cov),
+                      y = rep(data.list$coords[, 2], times = p.cov),
+                      covariate = factor(rep(cov.names, each = n)))
+plot.sf <- st_as_sf(plot.df, coords = c('x', 'y'), 
+                    crs = my.crs)
+ggplot() +
+  geom_sf(data = plot.sf, aes(col = val), size = 0.5) +
+  scale_color_viridis_c(option = 'plasma') +
+  theme_bw(base_size = 10) +
+  facet_wrap(~covariate, nrow = 2) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "")
+```
+
+Not surprisingly, the covariates seem to have very high correlation. Let's dig deeper
+
+```{r, fig.align = 'center'}
+pairs(data.list$covs, upper.panel = NULL, pch = 19, cex = 0.5)
+cor(data.list$covs)
+```
+
+Given the high correlation between most of the predictor variables, we will only use minimum temperature and elevation for our model.
+
+# Model Fitting
+
+We will fit the model with the `sfJSDM()` function in `spOccupancy`, which uses Nearest Neighbor Gaussian Processes [@datta2016hierarchical] and P&oacute;lya-Gamma data augmentation [@polson2013] for a computationally efficient implementation of binary spatial factor models. Full details on the syntax for `sfJSDM()` can be found with `?sfJSDM` and [a detailed vignette here](https://www.jeffdoser.com/files/spoccupancy-web/articles/factormodels) (among other models more specific for wildlife ecology).
+
+We first set the number of spatial factors and number of nearest neighbors that we'll use in the model. Here we'll use three spatial factors and five neighbors in the NNGP approximation. 
+
+```{r}
+# Number of factors
+n.factors <- 3
+# Number of neighbors for NNGP
+n.neighbors <- 5
+# Exponential covariance model
+cov.model <- 'exponential'
+```
+
+We'll next specify our priors for the model. We will use Gaussian priors for the "community-level" hyper mean parameters ($\bm{\mu}_{\beta}$) with a mean of 0 and variance of 2.72 (which results in a near uniform prior on the probability scale), and inverse-Gamma priors for the hyper-variance parameters ($\bm{\tau^2}_{\beta}$) with shape and scale equal to .1. Recall that for spatial factor models, we fix the spatial variance parameter $\sigma^2$ to 1 for each NNGP. The priors for the lower triangle of the factor loadings matrix are set to standard Gaussian priors. We then specify a uniform prior for the spatial decay parameters $\bm{\phi}$. For an exponential correlation function, the effective spatial range is equal to $3 / \phi$, so we can restrict the bounds of the effective spatial range by specifiying a prior of the form Uniform(3 / upper bound, 3 / lower bound). Here, we set the lower bound to 8km and the upper bound to 240km. We also set some initial values for most parameters in the model (which the function will do by default, but we do here just to be explicit).
+
+```{r}
+# Priors
+upper.dist <- 240
+lower.dist <- 8
+priors <- list(beta.comm.normal = list(mean = 0, var = 2.72), # Prior on hyper-means
+               tau.sq.beta.ig = list(a = 0.1, b = 0.1), # Prior for hyper-variances
+               phi.unif = list(3 / upper.dist, 3 / lower.dist))
+# Set initial values
+lambda.inits <- matrix(0, nrow(data.list$y), n.factors)
+diag(lambda.inits) <- 1
+inits <- list(beta.comm = 0, tau.sq.beta = 1, phi = 3 / 100,
+              lambda = lambda.inits)
+```
+
+Lastly, we fit the model using an Adaptive MCMC sampler, where we adjust the tuning parameters adaptively for those parameters whose full conditional distributions are not accessible in closed form. Here, because of the P&oacute;lya-Gamma data augmentation scheme we use, the only parameters we need to tune are the spatial decay parameters $\bm{\phi}$, which are updated using Metropolis-Hastings. In this adaptive algorithm, we set an initial tuning variance for $\bm{\phi}$ and split the total number of MCMC iterations up into a set of batches (`n.batches`) each of some specified length of iterations (`batch.length`). After each batch, the tuning variance of $\bm{\phi}$ is adjusted to try to achieve some target acceptance rate (`accept.rate`) of the proposed values. We will use a target acceptance rate of 0.43. Below, we set the initial tuning parameters, the number of batches, the length of each batch, and the amount of burn-in and thinning of each MCMC chain. Here we will just run a single MCMC chain. 
+
+```{r}
+# Set tuning parameters
+tuning <- list(phi = c(1, 0.5, 0.5))
+
+# Specify MCMC criteria
+# Number of batches
+n.batch <- 400
+# Batch length
+batch.length <- 25
+# Total number of MCMC samples is batch.length * n.batch
+(n.samples <- n.batch * batch.length)
+# Amount of burn-in
+n.burn <- 5000
+# Thinning rate
+n.thin <- 5
+# Number of chains
+n.chains <- 1
+```
+
+Now we are ready to fit our model. We specify the covariates that we want to include in the model using standard R formula syntax. Here we include linear and quadratic effects of minimum temperature and elevation. See `?sfJSDM` for more details on all model arguments.
+
+```{r}
+out <- sfJSDM(formula = ~ scale(tmin) + I(scale(tmin)^2) +
+                          scale(elev) + I(scale(elev)^2),
+              data = data.list, priors = priors, inits = inits,
+              n.neighbors = n.neighbors, cov.model = cov.model,
+              n.factors = n.factors, n.batch = n.batch, tuning = tuning,
+              batch.length = batch.length, n.burn = n.burn,
+              accept.rate = 0.43, n.thin = n.thin,
+              n.chains = n.chains, n.report = 100)
+# Quick summary of model output
+summary(out)
+```
+
+Here we only ran one chain of the model, so the model summary does not report a Gelman-Rubin diagnostic (Rhat) for any of the model parameters. Looking at the effective sample sizes, we see slow mixing of the spatial decay parameters and the species-specific intercepts. We can look further at the traceplots for some of the model parameters to get a better sense of how well our model has converged.
+
+```{r, fig.cap = 'Traceplots for hyper-mean parameters', fig.align = 'center'}
+# Components stored in the resulting model object
+names(out)
+plot(out$beta.comm.samples, density = FALSE)
+```
+
+```{r, fig.cap = 'Traceplots for the first nine-species intercepts', fig.align = 'center'}
+plot(out$beta.samples[, 1:9], density = FALSE)
+```
+
+```{r, fig.cap = 'Traceplots for the nine estimated loadings for the first spatial factor', fig.align = 'center'}
+plot(out$lambda.samples[, 2:10], density = FALSE)
+```
+
+```{r, fig.cap = 'Traceplots for occurrence probabilities for nine species at one forest plot', fig.align = 'center'}
+plot(mcmc(out$psi.samples[, 1:9, 10]), density = FALSE)
+```
+
+```{r, fig.cap = 'Traceplots for spatial decay parameters for the three spatial factors', fig.align = 'center'}
+plot(out$theta.samples, density = FALSE)
+```
+
+We see good mixing and convergence of the hyper-means, fairly slow mixing of some of the species-specific intercepts, adequate mixing and convergence of the loadings for the first spatial factor, and decent mixing and convergence of a few occurrence probabilities. The decay parameters (particularly the third one) do not show good mixing and/or convergence. This is not all that surprising, as these parameters are updated with a Metropolis-Hastings update while all other parameters have fully Gibbs updates. 
+
+Let's look a bit more at some of the parameter estimates from the model.
+
+```{r}
+# Create simple plot summaries using MCMCvis package
+# "Community"-level effects. Mean effects across all species
+MCMCplot(out$beta.comm.samples, ref_ovl = TRUE, ci = c(50, 95))
+# Effects for one species of interest (sugar maple)
+MCMCplot(out$beta.samples, ref_ovl = TRUE, ci = c(50, 95), exact = FALSE,
+         param = 'sugar-maple')
+# Latent factor loadings
+MCMCplot(out$lambda.samples, ref_ovl = TRUE, ci = c(50, 95))
+```
+
+Looking at the factor loadings (as well as the factors themselves) can give some indication as to how many factors you want to estimate in the model. For a given factor, if estimates of the loadings and the values of the factor across space are all close to 0, that suggests you might be able to reduce the number of factors in the model. 
+
+Next, let's compare the multivariate model to a couple of univariate models for two individual species. In the below set of code, we fit two univaraite models for American Beech and Eastern Hemlock, and then compare the univariate models to the joint model using WAIC. In a more formal comparison, we would generate some out-of-sample prediction criteria to compare the univariate and joint models. 
+
+```{r}
+# Use WAIC to compare spatial factor model to univariate spatial models for
+# two species (American beech and eastern hemlock)
+sp.names <- dimnames(data.list$y)[[1]]
+# Eastern hemlock ---------------------
+data.hemlock <- data.list
+data.hemlock$y <- data.list$y[which(sp.names == 'eastern-hemlock'), ]
+data.hemlock$weights <- rep(1, nrow(data.hemlock$covs))
+str(data.hemlock)
+priors.univariate <- list(beta.normal = list(mean = 0, var = 2.72),
+                          phi.unif = list(3 / upper.dist, 3 / lower.dist),
+                          sigma.sq.ig = list(2, 1))
+# Approx. run time: 1 minute
+out.hemlock <- svcPGBinom(formula = ~ scale(tmin) + I(scale(tmin)^2) +
+                                      scale(elev) + I(scale(elev)^2),
+                          data = data.hemlock, priors = priors.univariate, svc.cols = 1,
+                          n.neighbors = n.neighbors, cov.model = 'exponential',
+                          n.batch = n.batch, batch.length = batch.length,
+                          n.burn = n.burn, accept.rate = 0.43, n.thin = n.thin,
+                          n.chains = n.chains, n.report = 100)
+# American beech ----------------------
+data.beech <- data.list
+data.beech$y <- data.list$y[which(sp.names == 'American-beech'), ]
+data.beech$weights <- rep(1, nrow(data.beech$covs))
+str(data.beech)
+# Approx. run time: 1 minute
+out.beech <- svcPGBinom(formula = ~ scale(tmin) + I(scale(tmin)^2) +
+                                    scale(elev) + I(scale(elev)^2),
+                        data = data.beech, priors = priors.univariate, svc.cols = 1,
+                        n.neighbors = n.neighbors, cov.model = 'exponential',
+                        n.batch = n.batch, batch.length = batch.length,
+                        n.burn = n.burn, accept.rate = 0.43, n.thin = n.thin,
+                        n.chains = n.chains, n.report = 100)
+
+waic.joint <- waicOcc(out, by.sp = TRUE)
+rownames(waic.joint) <- sp.names
+waic.joint
+waicOcc(out.hemlock)
+waicOcc(out.beech)
+```
+
+WAIC is lower for both species, indicating the joint model provides some improvements compared to the univariate models.
+
+# Prediction
+
+Next, let's turn to our main task of predicting distributions across the state. First we load a set of covariates calculated across a 2 km grid of Vermont. We then standardize them by the values used to fit the data, and subsequently predict across the evenly spaced grid.
+
+```{r}
+# Read in prediction data (reads in two objects coords.0 and X.0
+load("prediction-data.rda")
+str(coords.0)
+str(X.0)
+
+# Standardize covariate values by values used to fit the model
+tmin.pred <- (X.0[, 'tmin'] - mean(data.list$covs$tmin)) / sd(data.list$covs$tmin)
+elev.pred <- (X.0[, 'elev'] - mean(data.list$covs$elev)) / sd(data.list$covs$elev)
+X.pred <- cbind(1, tmin.pred, tmin.pred^2, elev.pred, elev.pred^2)
+colnames(X.pred) <- c('(Intercept)', 'tmin', 'tmin.2', 'elev', 'elev.2')
+
+# Predict occurrence probabilities
+# Approx. run time: 1 minute
+out.pred <- predict(out, X.pred, coords.0)
+str(out.pred)
+```
+
+We see the prediction object contains three main components: 
+
++ `z.0.samples`: predictions of the binary presence/absence state at each of the prediction locations.
++ `w.0.samples`: predictions of the spatial factors at each of the prediction locations.
++ `psi.0.samples`: predictions of the occurrence probability (i.e., the back transformed linear predictor) across the prediction locations. 
+
+The `psi.0.samples` is what we will use to generate species distribution maps.
+
+```{r, fig.align = 'center'}
+# Generate predictions of occurrence probability across Vermont
+occ.pred.means <- apply(out.pred$psi.0.samples, c(2, 3), mean)
+occ.pred.sds <- apply(out.pred$psi.0.samples, c(2, 3), sd)
+
+n.pred <- nrow(X.pred)
+plot.df <- data.frame(psi.mean = c(t(occ.pred.means)),
+                      psi.sd = c(t(occ.pred.sds)),
+                      x = rep(coords.0[, 1], times = length(sp.names)),
+                      y = rep(coords.0[, 2], times = length(sp.names)),
+                      species = factor(rep(sp.names, each = n.pred)))
+pred.sf <- st_as_sf(plot.df, coords = c('x', 'y'))
+ggplot() +
+  geom_sf(data = pred.sf, aes(col = psi.mean)) +
+  scale_color_viridis_c(option = 'plasma') +
+  theme_bw(base_size = 9) +
+  facet_wrap(~species, nrow = 2) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "", title = 'Mean Occurrence Probability')
+
+ggplot() +
+  geom_sf(data = pred.sf, aes(col = psi.sd)) +
+  scale_color_viridis_c(option = 'plasma') +
+  theme_bw(base_size = 9) +
+  facet_wrap(~species, nrow = 2) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "", title = 'SD Occurrence Probability')
+```
+
+Lastly, we plot the three predicted spatial factors across the state. 
+
+```{r, fig.align = 'center'}
+# Generate predictions of spatial factors across Vermont
+w.pred.means <- apply(out.pred$w.0.samples, c(2, 3), mean)
+w.pred.sds <- apply(out.pred$w.0.samples, c(2, 3), sd)
+
+n.pred <- nrow(X.pred)
+plot.df <- data.frame(w.mean = c(t(w.pred.means)),
+		      w.sd = c(t(w.pred.sds)),
+		      x = rep(coords.0[, 1], times = n.factors),
+		      y = rep(coords.0[, 2], times = n.factors),
+		      id = factor(rep(1:n.factors, each = n.pred)))
+pred.sf <- st_as_sf(plot.df, coords = c('x', 'y'))
+ggplot() +
+  geom_sf(data = pred.sf, aes(col = w.mean)) +
+  scale_color_viridis_c(option = 'plasma') +
+  theme_bw(base_size = 16) +
+  facet_wrap(~id) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "", title = 'Mean Spatial Factor')
+
+ggplot() +
+  geom_sf(data = pred.sf, aes(col = w.sd)) +
+  scale_color_viridis_c(option = 'plasma') +
+  theme_bw(base_size = 16) +
+  facet_wrap(~id) +
+  theme(axis.text.x = element_blank(),
+        axis.text.y = element_blank()) +
+  labs(x = "Longitude", y = "Latitude", col = "", title = 'SD Spatial Factor')
+```
+
+Here, the first two factors have quite a low effective spatial range, so little information is provided to non-sampled locations. 
+
+# References {-}

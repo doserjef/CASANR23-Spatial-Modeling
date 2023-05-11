@@ -1,0 +1,189 @@
+\documentclass[xcolor=pdftex,dvipsnames,table,numbers,hyperref={pdfpagelabels=false},compress]{beamer}
+%\usepackage{requiredPackage}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amssymb}
+\usepackage{tabularx}
+\usepackage{epstopdf}
+\usepackage{overpic}
+\usepackage{url}
+\usepackage{calrsfs}
+\usepackage{mathrsfs}
+\usepackage{epsfig}
+\usepackage{cancel}
+\usepackage{changepage}
+
+\usepackage{lmodern}
+%\usepackage{mystyle}
+\usepackage{subfig}
+\usepackage{pifont}
+\usepackage{tabu}
+\usepackage{xcolor}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+%\usepackage{enumitem}
+\usepackage{remreset}
+\usepackage{etoolbox}
+\usepackage{comment} % end and begin comment
+%\usepackage{dtklogos} 
+\usepackage{listings}
+\lstset{breaklines=true} 
+
+\newcommand{\gline}{\textcolor{gray}{\hline}}
+\newcommand{\cmark}{\ding{51}}%
+\newcommand{\xmark}{\ding{55}}%
+\newcommand{\gcheck}{\textcolor{blue}{\Large \cmark}}
+\newcommand{\rcross}{\textcolor{red}{\Large \xmark}}
+\newcommand{\tkt}{\tilde{K}_\theta}
+\newcommand{\kt}{K_\theta}
+\newcommand{\ind}{\overset{ind}{\sim}}
+\newcommand{\plim}{\overset{p}{\rightarrow}}
+\newcommand{\cx}{\frac {X'X}n}
+\newcommand{\cz}{\frac {Z'Z}n}
+\newcommand{\ccz}{\frac {Z'Z}n - \Sigma_A}
+\newcommand{\czy}{\frac {Z'y}n}
+\newcommand{\cyz}{\frac {y'Z}n}
+\newcommand{\cxy}{\frac {X'y}n}
+\newcommand{\cyx}{\frac {y'X}n}
+\newcommand{\myitem}{\vskip3mm \item}
+
+\newcommand{\calS}{{\cal S}}
+\newcommand{\calA}{{\cal A}}
+\newcommand{\calK}{{\cal K}}
+\newcommand{\calX}{{\cal X}}
+\newcommand{\calD}{{\cal D}}
+\newcommand{\calG}{{\cal G}}
+\newcommand{\calT}{{\cal T}}
+\newcommand{\calU}{{\cal U}}
+\newcommand{\calR}{{\cal R}}
+\newcommand{\tp}{\tilde{p}}
+\newcommand{\tildebC}{\tilde{\bC}}
+\newcommand{\calL}{{\cal L}}
+
+\newcommand{\blam}{ \mbox{\boldmath $ \lambda $} }
+\newcommand{\bet}{ \mbox{\boldmath $ \eta $} }
+\newcommand{\bome}{ \mbox{\boldmath $ \omega $} }
+\newcommand{\bbet}{ \mbox{\boldmath $ \beta $} }
+\newcommand{\bbeta}{ \mbox{\boldmath $ \beta $} }
+\newcommand{\balph}{ \mbox{\boldmath $ \alpha $} }
+\newcommand{\balpha}{ \mbox{\boldmath $ \alpha $} }
+\newcommand{\bphi}{ \mbox{\boldmath $\phi$}}
+\newcommand{\bzeta}{ \mbox{\boldmath $\zeta$}}
+\newcommand{\bkap}{ \mbox{\boldmath $\kappa$}}
+\newcommand{\bkappa}{ \mbox{\boldmath $\kappa$}}
+\newcommand{\beps}{ \mbox{\boldmath $\epsilon$}}
+\newcommand{\bepsilon}{ \mbox{\boldmath $\epsilon$}}
+\newcommand{\bthet}{ \mbox{\boldmath $ \theta $} }
+\newcommand{\btheta}{ \mbox{\boldmath $ \theta $} }
+\newcommand{\blambda}{ \mbox{\boldmath $ \lambda $} }
+\newcommand{\bnu}{ \mbox{\boldmath $\nu$} }
+\newcommand{\bmu}{ \mbox{\boldmath $\mu$} }
+\newcommand{\bGam}{ \mbox{\boldmath $\Gamma$} }
+\newcommand{\bSig}{ \mbox{\boldmath $\Sigma$} }
+\newcommand{\bSigma}{ \mbox{\boldmath $\Sigma$} }
+\newcommand{\bPhi}{ \mbox{\boldmath $\Phi$} }
+\newcommand{\bThet}{ \mbox{\boldmath $\Theta$} }
+\newcommand{\bTheta}{ \mbox{\boldmath $\Theta$} }
+\newcommand{\bDel}{ \mbox{\boldmath $\Delta$} }
+\newcommand{\bDelta}{ \mbox{\boldmath $\Delta$} }
+\newcommand{\bnabla}{ \mbox{\boldmath $\nabla$} }
+\newcommand{\bLam}{ \mbox{\boldmath $\Lambda$} }
+\newcommand{\bLambda}{ \mbox{\boldmath $\Lambda$} }
+\newcommand{\bgam}{ \mbox{\boldmath $\gamma$} }
+\newcommand{\bgamma}{ \mbox{\boldmath $\gamma$} }
+\newcommand{\brho}{ \mbox{\boldmath $\rho$} }
+\newcommand{\bdel}{ \mbox{\boldmath $\delta$} }
+\newcommand{\bdelta}{ \mbox{\boldmath $\delta$} }
+\newcommand{\sis}{\sigma^2}
+\newcommand{\bOmega}{\mbox{\boldmath $\Omega$} }
+\newcommand{\bPsi}{ {\boldsymbol \Psi} }
+
+\newcommand{\bzero}{\textbf{0}}
+\newcommand{\bones}{\textbf{1}}
+\newcommand{\ba}{\textbf{a}}
+\newcommand{\bb}{\textbf{b}}
+\newcommand{\bB}{\textbf{B}}
+%\newcommand{\bA}{\textbf{A}}
+\newcommand{\bc}{\textbf{c}}
+\newcommand{\bC}{\textbf{C}}
+\newcommand{\bA}{\textbf{A}}
+\newcommand{\bd}{\textbf{d}}
+\newcommand{\bD}{\textbf{D}}
+\newcommand{\be}{\textbf{e}}
+\newcommand{\bE}{\textbf{E}}
+\newcommand{\bk}{\textbf{k}}
+\newcommand{\bK}{\textbf{K}}
+\newcommand{\bh}{\textbf{h}}
+\newcommand{\bs}{\textbf{s}}
+\newcommand{\bS}{\textbf{S}}
+\newcommand{\bH}{\textbf{H}}
+\newcommand{\bI}{\textbf{I}}
+\newcommand{\bt}{\textbf{t}}
+\newcommand{\bu}{\textbf{u}}
+\newcommand{\bv}{\textbf{v}}
+\newcommand{\bw}{\textbf{w}}
+\newcommand{\bW}{\textbf{W}}
+\newcommand{\bx}{\textbf{x}}
+\newcommand{\bX}{\textbf{X}}
+\newcommand{\by}{\textbf{y}}
+\newcommand{\bY}{\textbf{Y}}
+\newcommand{\bz}{\textbf{z}}
+\newcommand{\bZ}{\textbf{Z}}
+\newcommand{\bL}{\textbf{L}}
+\newcommand{\br}{\textbf{r}}
+\newcommand{\bR}{\textbf{R}}
+
+\newcommand{\given}{\,|\,}
+\newcommand{\T}{\top}
+
+\newcommand{\blue}[1]{{\color{RoyalBlue!90} #1}}
+\newcommand{\red}[1]{{\color{Red} #1}}
+\newcommand{\green}[1]{{\color{Green} #1}}
+\newcommand{\titl}[1]{{\begin{large}\begin{center}#1\end{center}\end{large}}}
+
+\newcommand{\tildea}{\tilde{a}}
+\newcommand{\tildeba}{\tilde{\ba}}
+\newcommand{\tildebv}{\tilde{\bv}}
+\newcommand{\tildev}{\tilde{v}}
+\newcommand{\tildeA}{\tilde{A}}
+\newcommand{\tildeC}{\tilde{C}}
+\newcommand{\tildeK}{\tilde{K}}
+\newcommand{\tildew}{\tilde{w}}
+\newcommand{\tildeu}{\tilde{u}}
+\newcommand{\tildebw}{\tilde{\bw}}
+\newcommand{\tildeeps}{\tilde{\epsilon}}
+\newcommand{\tildebeps}{\tilde{\bepsilon}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\sigs}{\sigma^2}
+\newcommand{\taus}{\tau^2}
+\newcommand{\iid}{\stackrel{\mathrm{iid}}{\sim}}
+
+%\newcommand{\calS}{{\cal S}}
+\newcommand{\calC}{{\cal C}}
+
+%\documentclass[10pt]{beamer}
+
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+\makeatletter
+\@addtoreset{subfigure}{framenumber}% subfigure counter resets every frame
+\makeatother
+
+\makeatletter
+\@addtoreset{figure}{framenumber}% subfigure counter resets every frame
+\makeatother
+
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+\captionsetup[subfigure]{labelformat=empty}

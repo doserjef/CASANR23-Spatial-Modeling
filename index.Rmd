@@ -1,0 +1,68 @@
+---
+title: "Scalable Bayesian models and estimation methods for the analysis of big spatial and spatio-temporal data"
+author:
+  - "Dr. Andrew Finley"
+  - "Dr. Jeffrey Doser<br>Michigan State University, East Lansing, Michigan"
+date: "Short course date: May 15, 2023"
+output:
+  prettydoc::html_pretty:
+    theme: cayman
+    highlight: github
+---
+
+## Course description
+
+Bayesian hierarchical models have been widely deployed for analyzing spatial and spatio-temporal datasets commonly encountered in forestry, ecology, agriculture, and climate sciences. However, with rapid development of remote sensing and environmental monitoring systems, statisticians and data analysts frequently encounter massive spatial and spatio-temporal data that cannot be analyzed using traditional approaches due to their heavy computing demands. In this course, we will present scalable Bayesian models and related estimation methods that provide fast analysis of big spatial and spatio-temporal data using modest computing resources and standard statistical software environments such as R. We will begin with an introduction to the common types of geo-referenced spatial data, then survey software packages for exploratory and subsequent statistical analysis. We will briefly cover exploratory data analysis techniques like variogram fitting, basics of geo-statistical approaches like kriging, and Gaussian Processes. We will then highlight key computational issues experienced by Gaussian Process models when confronted with large datasets. In this context, we will introduce scalable Bayesian models that can deliver fully model-based inference for massive spatial data. This discussion will focus on the Nearest Neighbor Gaussian Process (NNGP) that yields computational gains while providing rich Bayesian inference for analyzing large univariate and multivariate spatial data. We will also present a comparative assessment of other related methods and strategies for large spatial data including low-rank models. We will demonstrate practical implementation of these models using newly developed *spNNGP* and *spOccupancy* R packages. All topics will be motivated using real data and participants will be encouraged to follow along with the analyses on their own laptops. Motivating data will come from forestry, agriculture, and wildlife monitoring applications. The workshop will close with a short focused session on occupancy modeling to assess wildlife species distributions while explicitly accounting for measurement errors common in detection-nondetection data. We will not assume any significant previous exposure to spatial or spatio-temporal methods or Bayesian inference, although participants with basic knowledge of these areas will experience a gentler learning curve.
+
+********
+## Prior to the course Getting started
+
+This course offers lecture, discussion, and hands-on exercises on topics about efficient computing for spatial data models. We encourage you to work along with us on the exercises. To participate fully in the exercises, you'll need a recent version of R ($\geqslant$ 4.2). 
+
+### Installing *spBayes*, *spNNGP*, and *spOccupancy*
+
+We will use the *spBayes*, *spNNGP* and *spOccupancy* packages to fit spatial models, which can be installed from CRAN using `install.packages(c('spBayes', 'spNNGP', 'spOccupancy'))`
+
+### Installing additional R packages
+
+In the exercises, we will use additional R packages for exploratory data analysis and visualizations. To fully participate in the exercises, we encourage you to install the packages below if you do not have them. The code below can be run in R to only install those packages that don't currently exist on your system.
+
+```{r, eval = FALSE}
+required.packages <- c('coda', 'MCMCvis', 'ggplot2', 'pals', 'sf', 'maps', 'stars', 
+                       'MBA', 'geoR', 'raster', 'leaflet', 'sp', 'fields', 'classInt')
+new.packages <- required.packages[!(required.pkgs %in% installed.packages()[, 'Package'])]
+if (length(new.packages) > 0) {
+  install.packages(new.packages)
+}
+```
+
+## Course schedule Materials (download all in one [zip](casanr23.zip) or [tar.gz](casanr23.tar.gz))
+
+* 8:30 - 10:00 Introduction to Point-referenced Spatial Data 
+  * Introduction to Geostatistics [slides](slides/IntroToGeostatistics.pdf)
+      * Exercise 1
+        * [Markdown doc](exercises/exercise-1/exercise_1.html)
+        * Code [zip](exercises/exercise-1.zip) or [tar.gz](exercises/exercise-1.tar.gz)
+  * Bayesian Spatial Linear Regression [slides](slides/Bayesian_Spatial_Linear_Regression.pdf)
+      * Exercise 2
+        * [Markdown doc](exercises/exercise-2/CO-temp.html)
+        * Code [zip](exercises/exercise-2.zip) or [tar.gz](exercises/exercise-2.tar.gz)
+* 10:00 - 10:30 Break with snacks and registration
+* 10:30 - 12:00 High-dimensional Bayesian Geostatistics
+  * Low-rank models and the Predictive Process [slides](slides/Low_Rank_Predictive_Process.pdf)
+  * Sparsity composite likelihoods and the Nearest Neighbor Gaussian Process (NNGP) [slides](slides/SpatialNNGP.pdf)
+  * Advanced computing environments [slides](slides/CompNotes.pdf)
+    * Exercise 3
+      * [Markdown doc](exercises/exercise-3/harvard-Forest.html)
+      * Code [zip](exercises/exercise-3.zip) or [tar.gz](exercises/exercise-3.tar.gz)
+* 12:00 - 1:30 Group lunch 
+* 1:30 - 2:00 Modeling non-Gaussian Spatial Data [slides](slides/SpatialGLMMs.pdf)
+* 2:00 - 3:00 Spatial Factor Models for Multivariate Spatial Data [slides](slides/SpatialFactorModels.pdf)
+  * Exercise 4
+    * [R Markdown doc](exercises/exercise-4/exercise-4.html)
+    * Code [zip](exercises/exercise-4.zip) or [tar.gz](exercises/exercise-4.tar.gz)
+* 3:00 - 3:30 Break with snacks and registration
+* 3:30 - 4:30 Application of Spatially-Varying Coefficient Models [slides](slides/SVCs.pdf)
+    * Exercise 5
+      * [R Markdown doc](exercises/exercise-5/exercise-5.html)
+      * Code [zip](exercises/exercise-4.zip) or [tar.gz](exercises/exercises-4.tar.gz)

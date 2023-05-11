@@ -1,0 +1,2 @@
+/usr/bin/pdflatex SVCs.tex
+xdg-open SVCs.pdf
