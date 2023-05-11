@@ -1,2 +1,0 @@
-\beamer@sectionintoc {1}{Code implementation}{2}{0}{1}
-\beamer@sectionintoc {2}{Computing environments}{6}{0}{2}

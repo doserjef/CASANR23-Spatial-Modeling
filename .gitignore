@@ -14,3 +14,4 @@ slides/*.toc
 slides/*.sty
 slides/movie/
 tmp.txt
+compile
