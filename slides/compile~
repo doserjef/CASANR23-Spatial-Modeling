@@ -1,5 +1,5 @@
 /usr/bin/pdflatex IntroToGeostatistics.tex
-/usr/bin/pdflatex Bayesian_Conjugate_Linear_Regression.tex
+/usr/bin/pdflatex Bayesian_Spatial_Linear_Regression.tex
 /usr/bin/pdflatex Low_Rank_Predictive_Process.tex
 /usr/bin/pdflatex SpatialNNGP.tex
 /usr/bin/pdflatex CompNotes.tex

@@ -12,7 +12,7 @@
 
 \begin{frame}[plain]
 \begin{itemize}
-\item Course materials available at \href{tba}{tba}
+\item Course materials available at \href{https://doserjef.github.io/CASANR23-Spatial-Modeling/}{https://doserjef.github.io/CASANR23-Spatial-Modeling/}
 \end{itemize}
 \end{frame}
 
@@ -20,8 +20,8 @@
 %\section{Introduction}
 \begin{frame}{What is spatial data?}
 	\begin{itemize}
-		\item Any data with some geographical information
-			\pause\myitem {Common sources of spatial data: climatology, forestry, ecology, environmental health, disease epidemiology, real estate marketing etc %\pause
+		\item Any data with some geographical information (i.e., spatially indexed)
+			\myitem {Common sources of spatial data: agricultural, climatology, forestry, ecology, environmental health, disease epidemiology, product marketing, etc. %\pause
 			\begin{itemize}%\setlength{\itemsep}{0.3cm}
 				\item have many important predictors and response variables %\pause
 				\item are often presented as maps %\pause
@@ -29,8 +29,8 @@
 			\end{itemize}}
 			\pause\myitem Other examples where spatial need not refer to space on earth:
 			\begin{itemize}
+                                \item Genetics (position along a chromosome)
 				\item Neuroimaging (data for each voxel in the brain)
-				\item Genetics (position along a chromosome)
 			\end{itemize}
 	\end{itemize}
 \end{frame}
@@ -54,42 +54,42 @@
 	\begin{itemize}
 		\item \alert{Point-level modeling} refers to modeling of point-referenced data collected at locations referenced by \red{coordinates} (e.g., lat-long, Easting-Northing). %\pause
 		
-		\item Data from a spatial process $\{Y(s): s \in D\}$, $D$ is a subset in
+		\item Data from a spatial process $\{Y(\bs):\bs \in \calD\}$, $\calD$ is a subset in
 		Euclidean space. %\pause
 		
-		\item \blue{Example:} $Y(s)$ is a \red{pollutant level} at site $s$ %\pause
+		\item \blue{Example:} $Y(\bs)$ is a \red{pollutant level} at site $\bs$ %\pause
 		
 		\item \red{Conceptually:} Pollutant level exists at all possible sites %\pause
 		
-		\item \blue{Practically:} Data will be a partial realization of a spatial process -- observed at $\{s_1,\ldots,s_n\}$ %\pause
+		\item \blue{Practically:} Data will be a partial realization of a spatial process -- observed at $\{\bs_1,\ldots,\bs_n\}$ %\pause
 		
-		\item \red{Statistical objectives:} \blue{Inference} about the process $Y(s)$; \blue{predict} at new locations.
+		\item \red{Statistical objectives:} \blue{Inference} about the process $Y(\bs)$; \blue{predict} at new locations.
 		
-		\item \red{Remarkable:} Can learn about entire $Y(s)$ surface.  The \blue{key:} Structured dependence
+		\item \red{Remarkable:} Can learn about entire $Y(\bs)$ surface.  The \blue{key:} Structured dependence
 	\end{itemize}
 \end{frame}
 
 %\section{Exploratory data analysis (EDA) for point-referenced data}
 \begin{frame}{Exploratory data analysis (EDA): Plotting the data}
 	\begin{itemize}
-		\item A typical setup: Data observed at $n$ locations $\{s_1,\ldots,s_n\}$
-		\item At each $s_i$ we observe the response $y(s_i)$ and a $p\times 1$ vector of covariates $x(s_i)'$
+		\item A typical setup: Data observed at $n$ locations $\{\bs_1,\ldots,\bs_n\}$
+		\item At each $\bs_i$ we observe the response $y(\bs_i)$ and a $p\times 1$ vector of covariates $\bx(s_i)$
 		\item \alert{Surface plots} of the data often helps to understand spatial patterns
 	\end{itemize}
 	\vskip-7mm\begin{figure}
-	\subfloat[$y(s)$]{\includegraphics[scale=0.15,trim={0 5mm 0 5mm},clip]{../figures/data1_y.png}}
-	\subfloat[$x(s)$]{\includegraphics[scale=0.15,trim={0 5mm 0 5mm},clip]{../figures/data1_x.png}}\\
+	\subfloat[$y(\bs)$]{\includegraphics[scale=0.15,trim={0 5mm 0 5mm},clip]{../figures/data1_y.png}}
+	\subfloat[$x(\bs)$]{\includegraphics[scale=0.15,trim={0 5mm 0 5mm},clip]{../figures/data1_x.png}}\\
 	\caption{Response and covariate surface plots for Dataset 1}
 \end{figure}
 \end{frame}
 
 \begin{frame}{What's so special about spatial?}
 	\begin{itemize}
-		\item Linear regression model: $y(s_i)=x(s_i)'\beta + \eps(s_i)$
-		\item $\eps(s_i)$ are iid $N(0,\tau^2)$ errors 
-		\item $y=(y(s_1),y(s_2),\ldots,y(s_n))'$;  $X=(x(s_1)',x(s_2)',\ldots,x(s_n)')'$
-		\item \blue{Inference:} $\hat\beta = (X'X)^{-1}X'Y \sim N(\beta, \tau^2 (X'X)^{-1})$
-		\item \blue{Prediction} at new location $s_0$: $\widehat{y(s_0)} = x(s_0)'\hat\beta$
+		\item Linear regression model: $y(\bs_i)=\bx(s_i)^\top\bbeta + \eps(\bs_i)$
+		\item $\eps(\bs_i)$ are iid $N(0,\tau^2)$ errors 
+		\item $\by=(y(\bs_1),\ldots,y(\bs_n))^\top$;  $\bX=(\bx(\bs_1)^\top,\ldots,\bx(\bs_n)^\top)^\top$
+		\item \blue{Inference:} $\hat\bbeta = (\bX^\top\bX)^{-1}\bX^\top\by \sim N(\bbeta, \tau^2 (\bX^\top\bX)^{-1})$
+		\item \blue{Prediction} at new location $\bs_0$: $\widehat{y(s_0)} = \bx(s_0)^\top\hat\bbeta$
 		\item Although the data is spatial, this is an \red{ordinary linear regression} model
 		%\item Does this always suffice or we need any thing specialized method for such data?
 	\end{itemize}
@@ -97,16 +97,16 @@
 
 \begin{frame}{Residual plots}
 	\begin{itemize}
-		\item Surface plots of the residuals ($y(s) - \widehat{y(s)}$) help to identify any spatial patterns left unexplained by the covariates 
+		\item Surface plots of the residuals ($y(\bs) - \widehat{y(\bs)}$) help to identify any spatial patterns left unexplained by the covariates 
 	\end{itemize}
 	\begin{figure}
 		\includegraphics[scale=0.15,trim={2mm 5mm 2mm  5mm},clip]{../figures/data1_res.png}
-		\caption{Residual plot for Dataset 1 after linear regression on $x(s)$}
+		\caption{Residual plot for Dataset 1 after linear regression on $x(\bs)$}
 	\end{figure}
 	\pause
 	\vskip -5mm \begin{itemize}
 		\item No evident spatial pattern in plot of the residuals
-		\item The covariate $x(s)$ seem to explain all spatial variation in $y(s)$
+		\item The covariate $x(\bs)$ seem to explain all spatial variation in $y(\bs)$
 		\item \red{Does a non-spatial regression model always suffice?}
 	\end{itemize}
 \end{frame}
@@ -120,7 +120,7 @@
 
 \begin{figure} 
 	\begin{center}
-		\vskip -8mm \subfloat[DBH]{\includegraphics[scale=0.15]{../figures/wef_dbh_surf.png}}
+		\vskip -5mm \subfloat[DBH]{\includegraphics[scale=0.15]{../figures/wef_dbh_surf.png}}
 		\subfloat[Species]{ \includegraphics[scale=0.15]{../figures/wef_species.png}}
 		\subfloat[Residuals]{ \includegraphics[scale=0.15]{../figures/wef_res.png}}
 	\end{center}
@@ -136,19 +136,19 @@
 
 \begin{frame}{More EDA}
 	\begin{itemize}
-		\item Besides eyeballing residual surfaces, how to do more formal EDA to identify spatial pattern ?
+		\item Besides eyeballing residual surfaces, how to do more formal EDA to identify spatial pattern?
 	\end{itemize}
 	\pause
 	\metroset{block=fill}
       \begin{exampleblock}{First law of geography}
-{\em "Everything is related to everything else, but \red{near things are more related} than distant things."} -- Waldo Tobler
+{\em ``Everything is related to everything else, but \red{near things are more related} than distant things.''} -- Waldo Tobler
 		\end{exampleblock}
 	
 	\pause
 	\begin{itemize}
 		%\item The residual surface seems continuous 
 		%\item If a spatial surface $Y(s)$ is continuous then $(Y(s+h)-Y(s))^2 \rightarrow 0$ as $||h|| \rightarrow 0$
-		\item In general $(Y(s+h)-Y(s))^2$ roughly increasing with $||h||$ will imply a spatial correlation
+		\item In general $(Y(\bs+\bh)-Y(\bs))^2$ roughly increasing with $||\bh||$ will imply a spatial correlation
 		\item Can this be formalized to identify spatial pattern?
 	\end{itemize}
 \end{frame}
@@ -160,13 +160,13 @@
 		Representing each interval by its midpoint $t_k$, we
 		define:
 		\[
-		N(t_k) = \{(s_i,s_j): \|s_i - s_j\| \in I_k \},
+		N(t_k) = \{(\bs_i,\bs_j): \|\bs_i - \bs_j\| \in I_k \},
 		k=1,\ldots,K.
 		\]
 		\item \alert{Empirical semivariogram:}
 		\[
-		\gamma(t_k) = \frac{1}{2|N(t_k)|}\sum_{s_i,s_j \in
-			N(t_k)}(Y(s_i)-Y(s_j))^2
+		\gamma(t_k) = \frac{1}{2|N(t_k)|}\sum_{\bs_i,\bs_j \in
+			N(t_k)}(Y(\bs_i)-Y(\bs_j))^2
 		\]
 		%\item Semivariogram = $0.5\times$Variogram
 		\item For spatial data, the $\gamma(t_k)$ is expected to roughly increase with $t_k$
@@ -202,23 +202,23 @@
 \begin{frame}{Modeling with the locations}
 	\begin{itemize}
 		\myitem When purely covariate based models does not suffice, one needs to leverage the information from locations
-		\myitem General model using the locations: $y(s)=x(s)'\beta + w(s) + \eps(s)$ for all $s \in D$
+		\myitem General model using the locations: $y(\bs)=\bx(\bs)^\top\bbeta + w(\bs) + \eps(\bs)$ for all $\bs \in \calD$
 		\myitem How to choose the function $w(\cdot)$?
-		\myitem Since we want to predict at any location over the entire domain $D$, this choice will amount to choosing a \blue{surface} $w(s)$
-		\myitem How to do this ? 
+		\myitem Since we want to predict at any location over the entire domain $\calD$, this choice will amount to choosing a \blue{surface} $w(\bs)$
+		\myitem How should such a surface be chosen? 
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Gaussian Processes (GPs)}
 	\begin{itemize}
-		\item One popular approach to \blue{model} w(s) is via Gaussian Processes (GP)
-		\item The collection of random variables $\{w(s) \given s\in D\}$ is a GP if 
+		\item One popular approach to \blue{model} $w(\bs)$ is via Gaussian Processes (GP)
+		\item The collection of random variables $\{w(\bs) \given \bs\in \calD\}$ is a GP if 
 		\begin{itemize}
 			\item it is a \red{valid} stochastic process
-			\item all finite dimensional densities $\{w(s_1),\ldots,w(s_n)\}$ follow multivariate Gaussian distribution
+			\item all finite dimensional densities $\{w(\bs_1),\ldots,w(\bs_n)\}$ follow multivariate Gaussian distribution
 		\end{itemize}
-		\item A GP is completely characterized by a mean function $m(s)$ and a covariance function $C(\cdot,\cdot)$
-		\item \red{Advantage:} \blue{Likelihood} based inference. $w=(w(s_1),\ldots,w(s_n))' \sim N(m,C)$ where $m=(m(s_1),\ldots,m(s_n))'$ and $C=C(s_i,s_j)$
+		\item A GP is completely characterized by a mean function $m(\bs)$ and a covariance function $C(\cdot,\cdot)$
+		\item \red{Advantage:} \blue{Likelihood} based inference. $w=(\bw(s_1),\ldots,w(\bs_n))^\top \sim N(\bm,\bC)$ where $\bm=(m(\bs_1),\ldots,m(\bs_n))^\top$ and $\bC=C(\bs_i,\bs_j)$
 	\end{itemize}
 \end{frame}
 
@@ -226,15 +226,15 @@
 	
 	\begin{itemize}
 		
-		\item $C(\cdot,\cdot)$ needs to be \red{valid}.  For all $n$ and all $\{s_{1}, s_{2},..., s_{n}\}$, the resulting
-		covariance matrix $C(s_i,s_j)$ for $(w(s_{1}), w(s_{2}),..., w(s_{n}))$ must be positive definite
+		\item $C(\cdot,\cdot)$ needs to be \red{valid}.  For all $n$ and all $\{\bs_{1}, \bs_{2},\ldots, \bs_{n}\}$, the resulting
+		covariance matrix $C(\bs_i,\bs_j)$ for $(w(\bs_{1}), w(\bs_{2}),\ldots, w(\bs_{n}))$ must be positive definite
 		
 		\item So, $C(\cdot,\cdot)$ needs to be a \blue{positive definite} function
 		
 		\item Simplifying assumptions: 
 		\begin{itemize}
-			\item \alert{Stationarity:} $C(s_1,s_2)$ only depends on $h = s_1 - s_2$ (and is denoted by $C(h)$)
-			\item \alert{Isotropic:} $C(h) = C(||h||)$
+			\item \alert{Stationarity:} $C(\bs_1,\bs_2)$ only depends on $\bh = \bs_1 - \bs_2$ (and is denoted by $C(\bh)$)
+			\item \alert{Isotropic:} $C(\bh) = C(||\bh||)$
 			\item \alert{Anisotropic:} Stationary but not isotropic
 		\end{itemize}
 		
@@ -330,15 +330,15 @@
 
 \begin{frame}{Covariance functions and semivariograms}
 	\begin{itemize}
-		\item \green{Recall:} Empirical semivariogram: $\gamma(t_k) = \frac{1}{2|N(t_k)|}\sum_{s_i,s_j \in
-		N(t_k)}(Y(s_i)-Y(s_j))^2$ 
-	\item For any stationary GP, $E(Y(s+h)-Y(s))^2/2 = C(0)-C(h) = \gamma(h)$
-	\item $\gamma(h)$ is the \alert{semivariogram} corresponding to the covariance function $C(h)$
+		\item \green{Recall:} Empirical semivariogram: $\gamma(t_k) = \frac{1}{2|N(t_k)|}\sum_{\bs_i,\bs_j \in
+		N(t_k)}(Y(\bs_i)-Y(\bs_j))^2$ 
+	\item For any stationary GP, $E(Y(\bs+\bh)-Y(\bs))^2/2 = C(\bzero)-C(\bh) = \gamma(\bh)$
+	\item $\gamma(\bh)$ is the \alert{semivariogram} corresponding to the covariance function $C(\bh)$
 	\item \green{Example:} For exponential GP, $\gamma(t) = 
 	\left \{ \begin{array} {cl}%
 	\tau^{2}+\sigma^{2}(1-\exp(-\phi t)) & \mbox{if } t>0\\
 	0 & \mbox{if } t=0
-	\end{array} \right .$, where $t=||h||$
+	\end{array} \right .$, where $t=||\bh||$
 	\end{itemize}
 \end{frame}
 
@@ -376,38 +376,38 @@
 \end{frame}
 
 \begin{frame}{Kriging: Spatial prediction at new locations}
-	\begin{itemize}
-		\item \red{Goal:} Given observations $w=(w(s_1), w(s_2), \ldots, w(s_n))'$, predict $w(s_0)$ for a new location $s_0$
-		\item If $w(s)$ is modeled as a GP, then $(\red{w(s_0)}, w(s_1), \ldots, w(s_n))'$ jointly follow multivariate normal distribution
-		\item $w(s_0) \given w$ follows a normal distribution with
+	\begin{itemize}\setlength{\itemsep}{0.3cm}
+		\item \red{Goal:} Given observations $\bw=(w(\bs_1), w(\bs_2), \ldots, w(\bs_n))^\top$, predict $w(\bs_0)$ for a new location $\bs_0$
+		\item If $w(\bs)$ is modeled as a GP, then $(\red{w(\bs_0)}, w(\bs_1), \ldots, w(\bs_n))^\top$ jointly follow multivariate normal distribution
+		\item $w(\bs_0) \given \bw$ follows a normal distribution with
 			\begin{itemize}
-				\item Mean (\alert{kriging estimator}): $m(s_0) + c'C^{-1}(w-m)$ 
-				\item where $m=E(w)$, $C=Cov(w)$, $c=Cov(w,w(s_0))$
-				\item Variance: $C(s_0,s_0) - c'C^{-1}c$
+				\item Mean (\alert{kriging estimator}): $m(\bs_0) + \bc^\top\bC^{-1}(\bw-\bm)$ 
+				\item where $m=E(\bw)$, $\bC=Cov(\bw)$, $\bc=Cov(\bw,w(\bs_0))$
+				\item Variance: $\bC(\bs_0,\bs_0) - \bc^\top\bC^{-1}\bc$
 			\end{itemize}
-		\item The GP formulation gives the \blue{full predictive distribution} of $w(s_0) | w$ 
+		\item The GP formulation gives the \blue{full predictive distribution} of $w(\bs_0) | \bw$ 
 	\end{itemize}
 	\end{frame}
 
 \begin{frame}{Modeling with GPs}
 	\metroset{block=fill}{
 	\begin{alertblock}{Spatial linear model}
-		\[y(s)=x(s)'\beta + w(s) + \eps(s)\]
+		\[y(\bs)=x(\bs)^\top\bbeta + w(\bs) + \eps(\bs)\]
 	\end{alertblock}}
-	\begin{itemize}
-		\item $w(s)$ modeled as $GP(0,C(\cdot\given \theta))$ (usually without a nugget)
-		\item $\eps(s) \iid N(0,\taus)$ contributes to the nugget
-		\item Under isotropy: $C(s+h,s) = \sigs R(||h|| \; ; \phi )$
-		\item $w = (w(s_1),\ldots,w(s_n))' \sim N(0, \sigs R(\phi))$ where $R(\phi) = \sigs (R(||s_i-s_j|| \; ; \phi))$
-		\item $y=(y(s_1),\ldots,y(s_n))' \sim N(X\beta,\sigs R(\phi) + \taus I)$
+	\begin{itemize}\setlength{\itemsep}{0.25cm}
+		\item $w(\bs)$ modeled as $GP(0,C(\cdot\given \btheta))$ (usually without a nugget)
+		\item $\eps(\bs) \iid N(0,\taus)$ contributes to the nugget
+		\item Under isotropy: $C(\bs+\bh,\bs) = \sigs R(||\bh|| \; ; \phi )$
+		\item $\bw = (w(\bs_1),\ldots,w(\bs_n))^\top \sim N(\bzero, \sigs \bR(\phi))$ where $\bR(\phi) = \sigs (R(||s_i-s_j|| \; ; \phi))$
+		\item $\by=(y(\bs_1),\ldots,y(\bs_n))^\top \sim N(\bX\bbeta,\sigs \bR(\phi) + \taus \bI)$
 		%\item Kriging: $y(s_0) \given Y \sim N(x'\beta + c_0'(\sigs R(\phi) + \taus I)^{-1}(Y-X\beta), \sigs+\taus - c_0'(\sigs R(\phi) + \taus I)^{-1}c_0)$
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Parameter estimation}
-\begin{itemize}
-	\item $y=(y(s_1),\ldots,y(s_n))' \sim N(X\beta,\sigs R(\phi) + \taus I)$
-	\item We can obtain MLEs of parameters $\beta, \taus, \sigs, \phi$ based on the above model and use the estimates to krige at new locations
+\begin{itemize}\setlength{\itemsep}{0.25cm}
+	\item $\by=(y(\bs_1),\ldots,y(\bs_n))^\top \sim N(\bX\bbeta,\sigs \bR(\phi) + \taus \bI)$
+	\item We can obtain MLEs of parameters $\bbeta, \taus, \sigs, \phi$ based on the above model and use the estimates to krige at new locations
 	\item In practice, the likelihood is often very \red{flat} with respect to the spatial covariance parameters and choice of \blue{initial values} is important
 	\item Initial values can be eyeballed from empirical semivariogram of the residuals from ordinary linear regression
 	\item Estimated parameter values can be used for kriging
@@ -418,8 +418,8 @@
 	\begin{itemize}
 		\item For $k$ total parameters and sample size $n$:
 		\begin{itemize}
-			\item \alert{AIC:} $2k - 2 \log (l(y \given \hat\beta, \hat\theta, \hat\taus))$
-			\item \alert{BIC:} $\log(n) k - 2 \log (l(y \given \hat\beta, \hat\theta, \hat\taus))$
+			\item \alert{AIC:} $2k - 2 \log (l(\by \given \hat\bbeta, \hat\theta, \hat\taus))$
+			\item \alert{BIC:} $\log(n) k - 2 \log (l(\by \given \hat\bbeta, \hat\theta, \hat\taus))$
 		\end{itemize}
 		\myitem Prediction based approaches using holdout data:
 		\begin{itemize}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.6.29)  11 MAY 2023 05:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.22 (TeX Live 2022/dev/Debian) (preloaded format=pdflatex 2022.6.29)  11 MAY 2023 14:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -762,6 +762,99 @@ Package: changepage 2009/10/20 v1.0c check page and change page layout
 \c@cp@cntr=\count338
 \cp@tempcnt=\count339
 )
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
+Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
+File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfnodeparttextbox=\box79
+) (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
+File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65
+.sty
+Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@nodesepstart=\dimen299
+\pgf@nodesepend=\dimen300
+)
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18
+.sty
+Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
+)) (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex))
+(/usr/share/texlive/texmf-dist/tex/latex/pgf/math/pgfmath.sty
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
+Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
+\pgffor@iter=\dimen301
+\pgffor@skip=\dimen302
+\pgffor@stack=\toks48
+\pgffor@toks=\toks49
+))
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
+Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
+.code.tex
+File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgf@plot@mark@count=\count340
+\pgfplotmarksize=\dimen303
+)
+\tikz@lastx=\dimen304
+\tikz@lasty=\dimen305
+\tikz@lastxsaved=\dimen306
+\tikz@lastysaved=\dimen307
+\tikz@lastmovetox=\dimen308
+\tikz@lastmovetoy=\dimen309
+\tikzleveldistance=\dimen310
+\tikzsiblingdistance=\dimen311
+\tikz@figbox=\box80
+\tikz@figbox@bg=\box81
+\tikz@tempbox=\box82
+\tikz@tempbox@bg=\box83
+\tikztreelevel=\count341
+\tikznumberofchildren=\count342
+\tikznumberofcurrentchild=\count343
+\tikz@fig@count=\count344
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
+File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+\pgfmatrixcurrentrow=\count345
+\pgfmatrixcurrentcolumn=\count346
+\pgf@matrix@numberofcolumns=\count347
+)
+\tikz@expandcount=\count348
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)))
+(/usr/share/texlive/texmf-dist/tex/latex/hf-tikz/hf-tikz.sty
+Package: hf-tikz 2014/07/25 v0.3a A simple way to highlight formulas and formul
+a parts.
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
+zlibraryshadings.code.tex
+File: tikzlibraryshadings.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+
+(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryshadings.cod
+e.tex
+File: pgflibraryshadings.code.tex 2021/05/15 v3.1.9a (3.1.9a)
+)) (/usr/share/texlive/texmf-dist/tex/latex/l3packages/xparse/xparse.sty
+(/usr/share/texlive/texmf-dist/tex/latex/l3kernel/expl3.sty
+Package: expl3 2022-01-21 L3 programming layer (loader) 
+
+(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count349
+\l__pdf_internal_box=\box84
+))
+Package: xparse 2022-01-12 L3 Experimental document command parser
+))
 (/usr/share/texmf/tex/latex/lm/lmodern.sty
 Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
@@ -805,38 +898,38 @@ Package: caption 2020/10/26 v3.5g Customizing captions (AR)
 
 (/usr/share/texlive/texmf-dist/tex/latex/caption/caption3.sty
 Package: caption3 2020/10/21 v2.2e caption3 kernel (AR)
-\captionmargin=\dimen299
-\captionmargin@=\dimen300
-\captionwidth=\dimen301
-\caption@tempdima=\dimen302
-\caption@indent=\dimen303
-\caption@parindent=\dimen304
-\caption@hangindent=\dimen305
+\captionmargin=\dimen312
+\captionmargin@=\dimen313
+\captionwidth=\dimen314
+\caption@tempdima=\dimen315
+\caption@indent=\dimen316
+\caption@parindent=\dimen317
+\caption@hangindent=\dimen318
 Package caption Info: beamer document class detected.
 
 (/usr/share/texlive/texmf-dist/tex/latex/caption/caption-beamer.sto
 File: caption-beamer.sto 2020/08/22 v2.0 Adaption of the caption package to the
  beamer document classes (AR)
 ))
-\c@caption@flags=\count340
-\c@continuedfloat=\count341
+\c@caption@flags=\count350
+\c@continuedfloat=\count351
 Package caption Info: changepage package is loaded.
-\caption@adjustwidth@hsize=\dimen306
-\caption@adjustwidth@linewidth=\dimen307
+\caption@adjustwidth@hsize=\dimen319
+\caption@adjustwidth@linewidth=\dimen320
 Package caption Info: hyperref package is loaded.
 Package caption Info: Hyperref support is turned off
 (caption)             because hyperref has stopped early.
 )
-\c@KVtest=\count342
+\c@KVtest=\count352
 \sf@farskip=\skip67
-\sf@captopadj=\dimen308
+\sf@captopadj=\dimen321
 \sf@capskip=\skip68
 \sf@nearskip=\skip69
-\c@subfigure=\count343
-\c@subfigure@save=\count344
-\c@depth=\count345
-\c@subtable=\count346
-\c@subtable@save=\count347
+\c@subfigure=\count353
+\c@subfigure@save=\count354
+\c@depth=\count355
+\c@subtable=\count356
+\c@subtable@save=\count357
 \sf@top=\skip70
 \sf@bottom=\skip71
 )
@@ -860,32 +953,32 @@ mediate FMi
 
 (/usr/share/texlive/texmf-dist/tex/latex/varwidth/varwidth.sty
 Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
-\@vwid@box=\box79
-\sift@deathcycles=\count348
-\@vwid@loff=\dimen309
-\@vwid@roff=\dimen310
+\@vwid@box=\box85
+\sift@deathcycles=\count358
+\@vwid@loff=\dimen322
+\@vwid@roff=\dimen323
 )
-\c@taburow=\count349
-\tabu@nbcols=\count350
-\tabu@cnt=\count351
-\tabu@Xcol=\count352
-\tabu@alloc=\count353
-\tabu@nested=\count354
-\tabu@target=\dimen311
-\tabu@spreadtarget=\dimen312
-\tabu@naturalX=\dimen313
-\tabucolX=\dimen314
-\tabu@Xsum=\dimen315
-\extrarowdepth=\dimen316
-\abovetabulinesep=\dimen317
-\belowtabulinesep=\dimen318
-\tabustrutrule=\dimen319
-\tabu@thebody=\toks48
-\tabu@footnotes=\toks49
-\tabu@box=\box80
-\tabu@arstrutbox=\box81
-\tabu@hleads=\box82
-\tabu@vleads=\box83
+\c@taburow=\count359
+\tabu@nbcols=\count360
+\tabu@cnt=\count361
+\tabu@Xcol=\count362
+\tabu@alloc=\count363
+\tabu@nested=\count364
+\tabu@target=\dimen324
+\tabu@spreadtarget=\dimen325
+\tabu@naturalX=\dimen326
+\tabucolX=\dimen327
+\tabu@Xsum=\dimen328
+\extrarowdepth=\dimen329
+\abovetabulinesep=\dimen330
+\belowtabulinesep=\dimen331
+\tabustrutrule=\dimen332
+\tabu@thebody=\toks50
+\tabu@footnotes=\toks51
+\tabu@box=\box86
+\tabu@arstrutbox=\box87
+\tabu@hleads=\box88
+\tabu@vleads=\box89
 \tabu@cellskip=\skip72
 )
 (/usr/share/texlive/texmf-dist/tex/latex/algorithms/algorithm.sty
@@ -894,17 +987,17 @@ nment
 
 (/usr/share/texlive/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count355
-\float@exts=\toks50
-\float@box=\box84
-\@float@everytoks=\toks51
-\@floatcapt=\box85
+\c@float@type=\count365
+\float@exts=\toks52
+\float@box=\box90
+\@float@everytoks=\toks53
+\@floatcapt=\box91
 )
 (/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2020/11/24 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\@float@every@algorithm=\toks52
-\c@algorithm=\count356
+\@float@every@algorithm=\toks54
+\c@algorithm=\count366
 )
 (/usr/share/texlive/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty
 Package: algpseudocode 
@@ -913,15 +1006,15 @@ Package: algpseudocode
 Package: algorithmicx 2005/04/27 v1.2 Algorithmicx
 
 Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
-\c@ALG@line=\count357
-\c@ALG@rem=\count358
-\c@ALG@nested=\count359
+\c@ALG@line=\count367
+\c@ALG@rem=\count368
+\c@ALG@nested=\count369
 \ALG@tlm=\skip73
 \ALG@thistlm=\skip74
-\c@ALG@Lnr=\count360
-\c@ALG@blocknr=\count361
-\c@ALG@storecount=\count362
-\c@ALG@tmpcounter=\count363
+\c@ALG@Lnr=\count370
+\c@ALG@blocknr=\count371
+\c@ALG@storecount=\count372
+\c@ALG@tmpcounter=\count373
 \ALG@tmplength=\skip75
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
@@ -935,24 +1028,24 @@ Package remreset Warning: The remreset package is obsolete:
 
 Excluding comment 'comment')
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.sty
-\lst@mode=\count364
-\lst@gtempboxa=\box86
-\lst@token=\toks53
-\lst@length=\count365
-\lst@currlwidth=\dimen320
-\lst@column=\count366
-\lst@pos=\count367
-\lst@lostspace=\dimen321
-\lst@width=\dimen322
-\lst@newlines=\count368
-\lst@lineno=\count369
-\lst@maxwidth=\dimen323
+\lst@mode=\count374
+\lst@gtempboxa=\box92
+\lst@token=\toks55
+\lst@length=\count375
+\lst@currlwidth=\dimen333
+\lst@column=\count376
+\lst@pos=\count377
+\lst@lostspace=\dimen334
+\lst@width=\dimen335
+\lst@newlines=\count378
+\lst@lineno=\count379
+\lst@maxwidth=\dimen336
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
-\c@lstnumber=\count370
-\lst@skipnumbers=\count371
-\lst@framebox=\box87
+\c@lstnumber=\count380
+\lst@skipnumbers=\count381
+\lst@framebox=\box93
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/listings.cfg
 File: listings.cfg 2020/03/24 1.8d listings configuration
@@ -964,112 +1057,41 @@ Package: beamerthememetropolis 2017/01/23 v1.2 Metropolis Beamer theme
 
 (/usr/share/texlive/texmf-dist/tex/latex/pgfopts/pgfopts.sty
 Package: pgfopts 2014/07/10 v2.1a LaTeX package options with pgfkeys
-
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex))
-\pgfopts@list@add@a@toks=\toks54
-\pgfopts@list@add@b@toks=\toks55
+\pgfopts@list@add@a@toks=\toks56
+\pgfopts@list@add@b@toks=\toks57
 )
 (./beamerinnerthememetropolis.sty
 Package: beamerinnerthememetropolis 2017/01/23 Metropolis inner theme
 
 (/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2017/05/25 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count372
-\calc@Bcount=\count373
-\calc@Adimen=\dimen324
-\calc@Bdimen=\dimen325
+\calc@Acount=\count382
+\calc@Bcount=\count383
+\calc@Adimen=\dimen337
+\calc@Bdimen=\dimen338
 \calc@Askip=\skip76
 \calc@Bskip=\skip77
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count374
+\calc@Ccount=\count384
 \calc@Cskip=\skip78
 )
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty
-Package: pgf 2021/05/15 v3.1.9a (3.1.9a)
-
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex
-File: pgfmoduleshapes.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfnodeparttextbox=\box88
-) (/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex
-File: pgfmoduleplot.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65
-.sty
-Package: pgfcomp-version-0-65 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@nodesepstart=\dimen326
-\pgf@nodesepend=\dimen327
-)
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18
-.sty
-Package: pgfcomp-version-1-18 2021/05/15 v3.1.9a (3.1.9a)
-)) (/usr/share/texlive/texmf-dist/tex/latex/pgf/utilities/pgffor.sty
-(/usr/share/texlive/texmf-dist/tex/latex/pgf/math/pgfmath.sty
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex))
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex
-Package: pgffor 2021/05/15 v3.1.9a (3.1.9a)
-
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex)
-\pgffor@iter=\dimen328
-\pgffor@skip=\dimen329
-\pgffor@stack=\toks56
-\pgffor@toks=\toks57
-))
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex
-Package: tikz 2021/05/15 v3.1.9a (3.1.9a)
-
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers
-.code.tex
-File: pgflibraryplothandlers.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgf@plot@mark@count=\count375
-\pgfplotmarksize=\dimen330
-)
-\tikz@lastx=\dimen331
-\tikz@lasty=\dimen332
-\tikz@lastxsaved=\dimen333
-\tikz@lastysaved=\dimen334
-\tikz@lastmovetox=\dimen335
-\tikz@lastmovetoy=\dimen336
-\tikzleveldistance=\dimen337
-\tikzsiblingdistance=\dimen338
-\tikz@figbox=\box89
-\tikz@figbox@bg=\box90
-\tikz@tempbox=\box91
-\tikz@tempbox@bg=\box92
-\tikztreelevel=\count376
-\tikznumberofchildren=\count377
-\tikznumberofcurrentchild=\count378
-\tikz@fig@count=\count379
-
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex
-File: pgfmodulematrix.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-\pgfmatrixcurrentrow=\count380
-\pgfmatrixcurrentcolumn=\count381
-\pgf@matrix@numberofcolumns=\count382
-)
-\tikz@expandcount=\count383
-
-(/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
-zlibrarytopaths.code.tex
-File: tikzlibrarytopaths.code.tex 2021/05/15 v3.1.9a (3.1.9a)
-)))
 \metropolis@titleseparator@linewidth=\skip79
 \metropolis@progressonsectionpage=\skip80
 \metropolis@progressonsectionpage@linewidth=\skip81
 \metropolis@blocksep=\skip82
 \metropolis@blockadjust=\skip83
 \metropolis@parskip=\skip84
-) (./beamerouterthememetropolis.sty
+)
+(./beamerouterthememetropolis.sty
 Package: beamerouterthememetropolis 2017/01/23 Metropolis outer theme
 \metropolis@frametitle@padding=\skip85
 \metropolis@progressinheadfoot=\skip86
 \metropolis@progressinheadfoot@linewidth=\skip87
-)
-(./beamercolorthememetropolis.sty
+) (./beamercolorthememetropolis.sty
 Package: beamercolorthememetropolis 2017/01/23 Metropolis color theme
-) (./beamerfontthememetropolis.sty
+)
+(./beamerfontthememetropolis.sty
 Package: beamerfontthememetropolis 2017/01/23 Metropolis font theme
 
 (/usr/share/texlive/texmf-dist/tex/generic/iftex/ifxetex.sty
@@ -1096,12 +1118,12 @@ Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
 \cmidrulesep=\dimen346
 \cmidrulekern=\dimen347
 \defaultaddspace=\dimen348
-\@cmidla=\count384
-\@cmidlb=\count385
+\@cmidla=\count385
+\@cmidlb=\count386
 \@aboverulesep=\dimen349
 \@belowrulesep=\dimen350
-\@thisruleclass=\count386
-\@lastruleclass=\count387
+\@thisruleclass=\count387
+\@lastruleclass=\count388
 \@thisrulewidth=\dimen351
 )
 (/usr/share/texlive/texmf-dist/tex/latex/ccicons/ccicons.sty
@@ -1115,7 +1137,7 @@ Package: xkeyval 2020/11/20 v2.8 package option processing (HA)
 \XKV@toks=\toks58
 \XKV@tempa@toks=\toks59
 )
-\XKV@depth=\count388
+\XKV@depth=\count389
 File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
 )))
 (/usr/share/texlive/texmf-dist/tex/latex/pgfplots/pgfplots.sty
@@ -1128,8 +1150,8 @@ Package: pgfplots 2021/05/15 v1.18.1 Data Visualization (1.18.1)
 \t@pgfplots@tokb=\toks61
 \t@pgfplots@tokc=\toks62
 \pgfplots@tmpa=\dimen352
-\c@pgfplots@coordindex=\count389
-\c@pgfplots@scanlineindex=\count390
+\c@pgfplots@coordindex=\count390
+\c@pgfplots@scanlineindex=\count391
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/sys/pgfplotssysgeneric.code
 .tex))
@@ -1146,13 +1168,13 @@ tructure.code.tex)
 tructureext.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsarray
 .code.tex
-\c@pgfplotsarray@tmp=\count391
+\c@pgfplotsarray@tmp=\count392
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsmatri
 x.code.tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/numtable/pgfplotstableshare
 d.code.tex
-\c@pgfplotstable@counta=\count392
+\c@pgfplotstable@counta=\count393
 \t@pgfplotstable@a=\toks63
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/liststructure/pgfplotsdeque
@@ -1165,7 +1187,7 @@ de.tex))
 .tex)
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/libs/pgflibrarypgfplots.sur
 fshading.code.tex
-\c@pgfplotslibrarysurf@no=\count393
+\c@pgfplotslibrarysurf@no=\count394
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/sys/pgflibrarypgfplots.surf
 shading.pgfsys-pdftex.def)))
@@ -1197,11 +1219,11 @@ e.tex
 \pgfdecoratedinputsegmentcompleteddistance=\dimen355
 \pgfdecoratedinputsegmentremainingdistance=\dimen356
 \pgf@decorate@distancetomove=\dimen357
-\pgf@decorate@repeatstate=\count394
+\pgf@decorate@repeatstate=\count395
 \pgfdecorationsegmentamplitude=\dimen358
 \pgfdecorationsegmentlength=\dimen359
 )
-\tikz@lib@dec@box=\box93
+\tikz@lib@dec@box=\box94
 )
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tik
 zlibrarydecorations.pathmorphing.code.tex
@@ -1213,7 +1235,7 @@ zlibrarydecorations.pathreplacing.code.tex
 decorations.pathreplacing.code.tex))
 (/usr/share/texlive/texmf-dist/tex/generic/pgfplots/libs/tikzlibrarypgfplots.co
 ntourlua.code.tex)
-\pgfplots@numplots=\count395
+\pgfplots@numplots=\count396
 \pgfplots@xmin@reg=\dimen360
 \pgfplots@xmax@reg=\dimen361
 \pgfplots@ymin@reg=\dimen362
@@ -1236,17 +1258,17 @@ teplot.code.tex
 File: pgfcalendar.code.tex 2021/05/15 v3.1.9a (3.1.9a)
 
 (/usr/share/texlive/texmf-dist/tex/generic/pgf/math/pgfint.code.tex)
-\pgfcalendarcurrentjulian=\count396
-\pgf@cal@easter@Y=\count397
-\pgf@cal@easter@G=\count398
-\pgf@cal@easter@C=\count399
-\pgf@cal@easter@X=\count400
-\pgf@cal@easter@Z=\count401
-\pgf@cal@easter@D=\count402
-\pgf@cal@easter@E=\count403
-\pgf@cal@easter@N=\count404
-\pgf@cal@easter@M=\count405
-\pgf@cal@easter@julianday=\count406
+\pgfcalendarcurrentjulian=\count397
+\pgf@cal@easter@Y=\count398
+\pgf@cal@easter@G=\count399
+\pgf@cal@easter@C=\count400
+\pgf@cal@easter@X=\count401
+\pgf@cal@easter@Z=\count402
+\pgf@cal@easter@D=\count403
+\pgf@cal@easter@E=\count404
+\pgf@cal@easter@N=\count405
+\pgf@cal@easter@M=\count406
+\pgf@cal@easter@julianday=\count407
 )))
 (/usr/share/texlive/texmf-dist/tex/latex/tools/xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
@@ -1283,11 +1305,6 @@ LaTeX Font Info:    Trying to load font information for OT1+lmss on input line
 9.
  (/usr/share/texmf/tex/latex/lm/ot1lmss.fd
 File: ot1lmss.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-(/usr/share/texlive/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
-File: l3backend-pdftex.def 2022-01-12 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count407
-\l__pdf_internal_box=\box94
 )
 (./SVCs.aux)
 \openout1 = `SVCs.aux'.
@@ -1564,19 +1581,8 @@ LaTeX Font Info:    Font shape `OT1/lmss/bx/it' in size <6> not available
 (Font)              Font shape `OT1/lmss/bx/sl' tried instead on input line 37.
 
 
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 37.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 37.
-
-
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 37.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 37.
-
+Overfull \vbox (9.65698pt too high) detected at line 37
+ []
 
 [3
 
@@ -1644,34 +1650,11 @@ Overfull \hbox (5.69043pt too wide) in paragraph at lines 72--72
 ] [13
 
 ]
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 97.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 97.
-
-
 [14
 
-]
+] [15
 
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 97.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 97.
-
-
-[15
-
-]
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 97.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 97.
-
-
-[16
+] [16
 
 ]
 <../figures/svc-bobolink.png, id=121, 939.51pt x 361.35pt>
@@ -1706,35 +1689,11 @@ Overfull \vbox (22.69423pt too high) detected at line 130
 
 [19
 
- <../figures/EAWP-data.png>]
+ <../figures/EAWP-data.png>] [20
 
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 144.
+] [21
 
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 144
-.
-
-[20
-
-]
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 144.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 144
-.
-
-[21
-
-]
-
-LaTeX Font Warning: Command \boldmath invalid in math mode on input line 144.
-
-
-LaTeX Font Warning: Command \mathversion invalid in math mode on input line 144
-.
-
-[22
+] [22
 
 ] [23
 
@@ -1753,10 +1712,10 @@ Package rerunfilecheck Info: File `SVCs.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 41246 strings out of 478287
- 956063 string characters out of 5849289
- 1332232 words of memory out of 5000000
- 58526 multiletter control sequences out of 15000+600000
+ 41514 strings out of 478287
+ 963195 string characters out of 5849289
+ 1342638 words of memory out of 5000000
+ 58778 multiletter control sequences out of 15000+600000
  561840 words of font info for 107 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  133i,13n,125p,1826b,699s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1773,7 +1732,7 @@ r/share/texmf/fonts/type1/public/lm/lmsso8.pfb></usr/share/texmf/fonts/type1/pu
 blic/lm/lmsso9.pfb></usr/share/texmf/fonts/type1/public/lm/lmsy10.pfb></usr/sha
 re/texmf/fonts/type1/public/lm/lmsy8.pfb></usr/share/texmf/fonts/type1/public/l
 m/lmtt10.pfb>
-Output written on SVCs.pdf (23 pages, 3317517 bytes).
+Output written on SVCs.pdf (23 pages, 3317568 bytes).
 PDF statistics:
  242 PDF objects out of 1000 (max. 8388607)
  171 compressed objects within 2 object streams

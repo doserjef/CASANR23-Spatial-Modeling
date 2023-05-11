@@ -33,27 +33,27 @@
 \begin{itemize}\setlength{\itemsep}{0.4cm}
  \item Typically, we have a set of \emph{units} or \emph{experimental subjects} $i=1,2,\ldots,n$.
 
- \item For each of these units we have measured an outcome $y_i$ and a set of explanatory variables $x_i^{\top} = (1, x_{i1}, x_{i2}, \ldots, x_{ip})$. 
+ \item For each of these units we have measured an outcome $y_i$ and a set of explanatory variables $\bx_i^{\top} = (1, x_{i1}, x_{i2}, \ldots, x_{ip})$. 
 
- \item The first element of $x_i^{\top}$ is often taken as $1$ to signify the presence of an ``intercept''. 
+ \item The first element of $\bx_i^{\top}$ is often taken as $1$ to signify the presence of an ``intercept''. 
  
  \item We collect the outcome and explanatory variables into an $n\times 1$ vector and an $n\times (p+1)$ matrix:
 \begin{align*}
- y = \begin{pmatrix} 
+ \by = \begin{pmatrix} 
 	y_1 \\
         y_2 \\
 	\vdots \\
 	y_n
-       \end{pmatrix};\quad X = \begin{bmatrix}
+       \end{pmatrix};\quad \bX = \begin{bmatrix}
 			1 & x_{11} & x_{12} & \ldots & x_{1p} \\
 			1 & x_{21} & x_{22} & \ldots & x_{2p} \\
 			\vdots & \vdots & \vdots & \vdots & \vdots \\
 			1 & x_{n1} & x_{n2} & \ldots & x_{np}
                        \end{bmatrix} = \begin{pmatrix} 
-	x_1^{\top} \\
-        x_2^{\top} \\
+	\bx_1^{\top} \\
+        \bx_2^{\top} \\
 	\vdots \\
-	x_n^{\top}
+	\bx_n^{\top}
        \end{pmatrix}\; . 
 \end{align*}
 
@@ -79,18 +79,18 @@
 \begin{itemize}\setlength{\itemsep}{0.4cm}
  \item \vskip-2mm A conjugate Bayesian linear model is given by:
 \begin{align*}
-& y_i\given \mu_i,\sigma^2, X \stackrel{ind}{\sim} N(\mu_i,\sigma^2);\quad i=1,2,\ldots,n\;;\\
-& \mu_i = \beta_0 + \beta_1x_{i1} + \cdots + \beta_{p} x_{ip} = x_i^{\top}\beta\;;\quad \beta = (\beta_0,\beta_1,\ldots,\beta_{p})^{\top}\;; \\
-& \beta \given \sigma^2 \sim N(\mu_{\beta}, \sigma^2 V_{\beta})\;;\quad  \sigma^2 \sim IG(a,b)\; .
+& y_i\given \bbeta,\sigma^2, \bx_i \stackrel{ind}{\sim} N(\mu_i,\sigma^2);\quad i=1,2,\ldots,n\;;\\
+& \mu_i = \beta_0 + \beta_1x_{i1} + \cdots + \beta_{p} x_{ip} = \bx_i^{\top}\bbeta\;;\quad \bbeta = (\beta_0,\beta_1,\ldots,\beta_{p})^{\top}\;; \\
+& \bbeta \given \sigma^2 \sim N(\bmu_{\beta}, \sigma^2 \bV_{\beta})\;;\quad  \sigma^2 \sim IG(a,b)\; .
 \end{align*}
 
-\item Unknown parameters include the regression parameters and the variance, i.e. $\theta = \{\beta, \sigma^2\}$. 
+\item Unknown parameters include the regression parameters and the variance, i.e. $\btheta = \{\bbeta, \sigma^2\}$. 
 
-\item We assume $X$ is observed without error and all inference is conditional on $X$.
+\item We assume $\bX$ is observed without error and all inference is conditional on $\bX$.
 
-\item The above model is often written it terms of the posterior density $p(\theta \given y) \propto p(\theta, y)$:
+\item The above model is often written in terms of the posterior density $p(\btheta \given \by) \propto p(\btheta, \by)$:
 \begin{align*}
- IG(\sigma^2\given a,b) \times N(\beta \given \mu_{\beta}, \sigma^2 V_{\beta}) \times \prod_{i=1}^n N(y_i \given x_i^{\top}\beta, \sigma^2)\;.
+ IG(\sigma^2\given a,b) \times N(\bbeta \given \bmu_{\beta}, \sigma^2 \bV_{\beta}) \times \prod_{i=1}^n N(y_i \given \bx_i^{\top}\bbeta, \sigma^2)\;.
 \end{align*}
 
 \end{itemize}
@@ -103,23 +103,23 @@
 \begin{itemize}\setlength{\itemsep}{0.1cm}
  \item \vskip-2mm A more general conjugate Bayesian linear model is given by:
 \begin{align*}
-& y \given \beta,\sigma^2, X \sim N(X\beta, \sigma^2 V_y)\\
-& \beta \given \sigma^2 \sim N(\mu_{\beta}, \sigma^2 V_{\beta})\;;\\
+& \by \given \bbeta,\sigma^2, \bX \sim N(\bX\bbeta, \sigma^2 \bV_y)\\
+& \bbeta \given \sigma^2 \sim N(\bmu_{\beta}, \sigma^2 \bV_{\beta})\;;\\
 & \sigma^2 \sim IG(a,b)\; .
 \end{align*}
 
-\item $V_y$, $V_{\beta}$ and $\mu_{\beta}$ are assumed fixed.
+\item $\bV_y$, $\bV_{\beta}$ and $\bmu_{\beta}$ are assumed fixed.
 
-\item Unknown parameters include the regression parameters and the variance, i.e. $\theta = \{\beta, \sigma^2\}$. 
+\item Unknown parameters include the regression parameters and the variance, i.e. $\btheta = \{\bbeta, \sigma^2\}$. 
 
-\item We assume $X$ is observed without error and all inference is conditional on $X$.
+\item We assume $\bX$ is observed without error and all inference is conditional on $\bX$.
 
-\item The posterior density $p(\theta \given y) \propto p(\theta, y)$:
+\item The posterior density $p(\btheta \given \by) \propto p(\btheta, \by)$:
 \begin{align*}
- IG(\sigma^2\given a,b) \times N(\beta \given \mu_{\beta}, \sigma^2 V_{\beta}) \times N(y \given X\beta, \sigma^2 V_{y})
+ IG(\sigma^2\given a,b) \times N(\bbeta \given \bmu_{\beta}, \sigma^2 \bV_{\beta}) \times N(\by \given \bX\bbeta, \sigma^2 \bV_{y})
 \end{align*}
 
-\item The model on the previous slide is a special case with $V_y = I_n$ ($n\times n$ identity matrix).
+\item The model on the previous slide is a special case with $\bV_y = \bI_n$ ($n\times n$ identity matrix).
 \end{itemize}
 
 \end{frame}
@@ -129,24 +129,24 @@
 \begin{itemize}\setlength{\itemsep}{0.1cm}
  \item The joint posterior density can be written as
 \begin{align*}
- p(\beta,\sigma^2 \given y) &\propto
+ p(\bbeta,\sigma^2 \given \by) &\propto
  \begin{array}{ccc}
-  \underbrace{IG(\sigma^2\given a^*, b^*)} & \times & \underbrace{N\left(\beta \given Mm, \sigma^2 M\right)}\\
-  p(\sigma^2\given y) & & p(\beta\given \sigma^2, y)
+  \underbrace{IG(\sigma^2\given a^*, b^*)} & \times & \underbrace{N\left(\bbeta \given \bM\bm, \sigma^2 \bM\right)}\\
+  p(\sigma^2\given \by) & & p(\bbeta\given \sigma^2, \by)
  \end{array}\; , 
 \end{align*}
 where 
 \begin{align*}
-& a^* = a + \frac{n}{2}\;;\quad b^* = b + \frac{1}{2}\left(\mu_{\beta}^{\top}V_{\beta}^{-1}\mu_{\beta} + y^{\top}y - m^{\top}Mm\right)\;; \\ 
-& m = V_{\beta}^{-1}\mu_{\beta} + X^{\top}V_y^{-1}y\;;\quad M^{-1} = V_{\beta}^{-1} + X^{\top} V_y^{-1} X\; .   
+& a^* = a + \frac{n}{2}\;;\quad b^* = b + \frac{1}{2}\left(\bmu_{\beta}^{\top}\bV_{\beta}^{-1}\bmu_{\beta} + \by^{\top}\bV_y^{-1}\by - \bm^{\top}\bM\bm\right)\;; \\ 
+& \bm = \bV_{\beta}^{-1}\bmu_{\beta} + \bX^{\top}\bV_y^{-1}\by\;;\quad \bM^{-1} = \bV_{\beta}^{-1} + \bX^{\top} \bV_y^{-1} \bX\; .   
 \end{align*}
 
-\item Exact posterior sampling from $p(\beta, \sigma^2 \given y)$ will automatically yield samples from $p(\beta\given y)$ and $p(\sigma^2\given y)$.
+\item Exact posterior sampling from $p(\bbeta, \sigma^2 \given \by)$ will automatically yield samples from $p(\bbeta\given \by)$ and $p(\sigma^2\given \by)$.
 
 \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}
   \item Draw $\displaystyle \sigma^2_{(i)} \sim IG(a^*,b^*)$
-  \item Draw $\displaystyle \beta_{(i)} \sim N\left(Mm, \sigma^2_{(i)}M\right)$
+  \item Draw $\displaystyle \beta_{(i)} \sim N\left(\bM\bm, \sigma^2_{(i)}\bM\right)$
  \end{enumerate}
  
  \item The above is sometimes referred to as \emph{composition sampling}.
@@ -156,28 +156,28 @@ where
 
 \begin{frame}{Exact sampling from joint posterior distributions}
 
-\begin{itemize}\setlength{\itemsep}{0cm}
-\item \vskip-4mm Suppose we wish to draw samples from a joint posterior:
+\begin{itemize}\setlength{\itemsep}{0.25cm}
+\item Suppose we wish to draw samples from a joint posterior:
 \[
- p(\theta_1,\theta_2\given y) = p(\theta_1\given y) \times p(\theta_2\given \theta_1, y)\; .
+ p(\theta_1,\theta_2\given \by) = p(\theta_1\given \by) \times p(\theta_2\given \theta_1, \by)\; .
 \]
 
-\item In conjugate models, it is often easy to draw samples from $p(\theta_1\given y)$ and from $p(\theta_2\given \theta_1,y)$. 
+\item In conjugate models, it is often easy to draw samples from $p(\theta_1\given \by)$ and from $p(\theta_2\given \theta_1,\by)$. 
 
-\item We can draw $M$ samples from $p(\theta_1,\theta_2\given y)$ as follows.
+\item We can draw $N$ samples from $p(\theta_1,\theta_2\given \by)$ as follows.
 
 \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0cm}
-  \item Draw $\displaystyle \theta_{1(i)} \sim p(\theta_1\given y)$
-  \item Draw $\displaystyle \theta_{2(i)} \sim p(\theta_2\given \theta_1,y)$
+  \item Draw $\displaystyle \theta_{1(i)} \sim p(\theta_1\given \by)$
+  \item Draw $\displaystyle \theta_{2(i)} \sim p(\theta_2\given \theta_1,\by)$
  \end{enumerate}
 
-\item Remarkably, the $\theta_{2(i)}$'s drawn above have marginal distribution $p(\theta_2\given y)$ because: 
-\vskip -9mm \begin{align*} P(\theta_2\leq u \given y) &= \mbox{E}_{\theta_2|y}\left[1(\theta_2\leq u)\right] = \mbox{E}_{\theta_1|y}\left\{\mbox{E}_{\theta_2|\theta_1, y}\left[1(\theta_2\leq u)\right]\right\} \\
-  &\approx \frac{1}{N} \sum_{i=1}^N \mbox{E}_{\theta_2|\theta_{1(i)}, y}\left[1(\theta_2\leq u)\right] \approx  \frac{1}{N} \sum_{i=1}^N 1(\theta_{2(i)}\leq u)\; .
-\end{align*}
+\item Remarkably, the $\theta_{2(i)}$'s drawn above have marginal distribution $p(\theta_2\given \by)$ (see, Gelfand and Smith 1990). %because: 
+%\vskip -9mm \begin{align*} P(\theta_2\leq u \given y) &= \mbox{E}_{\theta_2|y}\left[1(\theta_2\leq u)\right] = \mbox{E}_{\theta_1|y}\left\{\mbox{E}_{\theta_2|\theta_1, y}\left[1(\theta_2\leq u)\right]\right\} \\
+%  &\approx \frac{1}{N} \sum_{i=1}^N \mbox{E}_{\theta_2|\theta_{1(i)}, y}\left[1(\theta_2\leq u)\right] \approx  \frac{1}{N} \sum_{i=1}^N 1(\theta_{2(i)}\leq u)\; .
+%\end{align*}
 
-\item ``Automatic Marginalization:'' We draw samples $p(\theta_1,\theta_2\given y)$ and automatically get samples from $p(\theta_1\given y)$ and $p(\theta_2\given y)$.
+\item ``Automatic Marginalization'' we draw samples $p(\theta_1,\theta_2\given \by)$ and automatically get samples from $p(\theta_1\given \by)$ and $p(\theta_2\given \by)$.
 
 \end{itemize}
 
@@ -190,46 +190,46 @@ where
 %   \[
 %    IG(\sigma^2\given a,b) \times N(\beta \given \mu_{\beta}, \sigma^2 V_{\beta}) \times N(y \given X\beta, \sigma^2I_n)\;.
 %   \]
-  \item Let $\tilde{y}$ denote an $m\times 1$ vector of outcomes we seek to predict based upon predictors $\tilde{X}$.
+  \item Let $\tilde{\by}$ denote an $m\times 1$ vector of outcomes we seek to predict based upon predictors $\tilde{\bX}$.
   \item We seek the posterior predictive density:
 \[
- p(\tilde{y}\given y) = \int p(\tilde{y}\given \theta, y) p(\theta\given y) \mbox{d}\theta\; .
+ p(\tilde{\by}\given \by) = \int p(\tilde{\by}\given \btheta, \by) p(\btheta\given \by) \mbox{d}\btheta .
 \]
-  \item Posterior predictive inference: sample from $p(\tilde{y}\given y)$.
+  \item Posterior predictive inference: sample from $p(\tilde{\by}\given \by)$.
   \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
-  \item Draw $\displaystyle \theta_{(i)} \sim p(\theta\given y)$
-  \item Draw $\displaystyle \tilde{y}_{(i)} \sim p(\tilde{y}\given \theta_{(i)},y)$
+  \item Draw $\displaystyle \btheta_{(i)} \sim p(\btheta\given \by)$
+  \item Draw $\displaystyle \tilde{\by}_{(i)} \sim p(\tilde{\by}\given \btheta_{(i)},\by)$
  \end{enumerate}
   
  \end{itemize}
 
 \end{frame}
 
-\begin{frame}{Bayesian predictions from linear regression (contd.)}
+\begin{frame}{Bayesian predictions from linear regression (cont'd)}
  
  \begin{itemize}\setlength{\itemsep}{0.cm}
-  \item \vskip -2mm For legitimate probabilistic predictions (forecasting), the conditional distribution $p(\tilde{y}\given \theta, y)$ must be well-defined.
+  \item \vskip -2mm For legitimate probabilistic predictions (forecasting), the conditional distribution $p(\tilde{\by}\given \btheta, \by)$ must be well-defined.
   
-  \item For example, consider the case with $V_y = I_n$. Specify the linear model:
+  \item For example, consider the case with $\bV_y = \bI_n$. Specify the linear model:
 \begin{align*}
- \begin{bmatrix} y \\ \tilde{y} \end{bmatrix} = \begin{bmatrix} X \\ \tilde{X} \end{bmatrix}\beta + \begin{bmatrix} \epsilon \\ \tilde{\epsilon} \end{bmatrix}\;;\quad \begin{bmatrix} \epsilon \\ \tilde{\epsilon} \end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0 \end{bmatrix},\, \sigma^2\begin{bmatrix} I_n & O \\ O & I_m \end{bmatrix}\right)\; .  
+ \begin{bmatrix} \by \\ \tilde{\by} \end{bmatrix} = \begin{bmatrix} \bX \\ \tilde{\bX} \end{bmatrix}\bbeta + \begin{bmatrix} \bepsilon \\ \tilde{\bepsilon} \end{bmatrix}\;;\quad \begin{bmatrix} \bepsilon \\ \tilde{\bepsilon} \end{bmatrix} \sim N\left(\begin{bmatrix} \bzero \\ \bzero \end{bmatrix},\, \sigma^2\begin{bmatrix} \bI_n & O \\ O & \bI_m \end{bmatrix}\right)\; .  
 \end{align*}
   
   \item Easy to derive the conditional density:
 \[
- p(\tilde{y}\given \theta, y) =  p(\tilde{y}\given \theta) = N(\tilde{y}\given \tilde{X}\beta, \sigma^2 I_m)
+ p(\tilde{\by}\given \btheta, \by) =  p(\tilde{\by}\given \btheta) = N(\tilde{\by}\given \tilde{\bX}\bbeta, \sigma^2 \bI_m)
 \]
 
 \item Posterior predictive density:
 \[
- p(\tilde{y}\given y) = \int N(\tilde{y}\given \tilde{X}\beta, \sigma^2 I_m) p(\beta, \sigma^2\given y) \mbox{d}\beta \mbox{d}\sigma^2\; .
+ p(\tilde{\by}\given \by) = \int N(\tilde{\by}\given \tilde{\bX}\bbeta, \sigma^2 \bI_m) p(\bbeta, \sigma^2\given \by) \mbox{d}\bbeta \mbox{d}\sigma^2\; .
 \]
 
 \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
-  \item Draw $\displaystyle \{\beta_{(i)},\sigma^2_{(i)}\} \sim p(\beta,\sigma^2\given y)$
-  \item Draw $\displaystyle \tilde{y}_{(i)} \sim N(\tilde{X}\beta_{(i)}, \sigma^2_{(i)} I_m)$
+  \item Draw $\displaystyle \{\bbeta_{(i)},\sigma^2_{(i)}\} \sim p(\bbeta,\sigma^2\given \by)$
+  \item Draw $\displaystyle \tilde{\by}_{(i)} \sim N(\tilde{\bX}\bbeta_{(i)}, \sigma^2_{(i)} \bI_m)$
  \end{enumerate}
  \end{itemize}
 
@@ -238,30 +238,30 @@ where
 \begin{frame}{Bayesian predictions from general linear regression}
  
  \begin{itemize}\setlength{\itemsep}{0.cm}  
-  \item For example, consider the case with general $V_y$. Specify:
+  \item For example, consider the case with general $\bV_y$. Specify:
 
   \begin{align*}
- \begin{bmatrix} y \\ \tilde{y} \end{bmatrix} = \begin{bmatrix} X \\ \tilde{X} \end{bmatrix}\beta + \begin{bmatrix} \epsilon \\ \tilde{\epsilon} \end{bmatrix}\;;\quad \begin{bmatrix} \epsilon \\ \tilde{\epsilon} \end{bmatrix} \sim N\left(\begin{bmatrix} 0 \\ 0 \end{bmatrix},\, \sigma^2\begin{bmatrix} V_{y} & V_{y\tilde{y}} \\ V_{y\tilde{y}}^{\top} & V_{\tilde{y}} \end{bmatrix}\right)\; .  
+ \begin{bmatrix} \by \\ \tilde{\by} \end{bmatrix} = \begin{bmatrix} \bX \\ \tilde{\bX} \end{bmatrix}\bbeta + \begin{bmatrix} \bepsilon \\ \tilde{\bepsilon} \end{bmatrix}\;;\quad \begin{bmatrix} \bepsilon \\ \tilde{\bepsilon} \end{bmatrix} \sim N\left(\begin{bmatrix} \bzero \\ \bzero \end{bmatrix},\, \sigma^2\begin{bmatrix} \bV_{y} & \bV_{y\tilde{y}} \\ \bV_{y\tilde{y}}^{\top} & \bV_{\tilde{y}} \end{bmatrix}\right)\; .  
 \end{align*}
   
-  \item Derive the conditional density $\displaystyle p(\tilde{y}\given \theta, y) = N\left(\tilde{y}\given \mu_{\tilde{y}|y}, \sigma^2 V_{\tilde{y}|y}\right)$:
+  \item Derive the conditional density $\displaystyle p(\tilde{\by}\given \btheta, \by) = N\left(\tilde{\by}\given \bmu_{\tilde{y}|y}, \sigma^2 \bV_{\tilde{y}|y}\right)$:
 % \begin{align*}
 %  p(\tilde{y}\given \theta, y) = N\left(\tilde{y}\given \tilde{X}\beta + V_{y\tilde{y}}^{\top}V_y^{-1}(y-X\beta), \sigma^2 \left{V_{\tilde{y}} -  V_{y\tilde{y}}^{\top}V_y^{-1}V_{y\tilde{y}} \right}\right)
 % \end{align*}
 \begin{align*}
 % p(\tilde{y}\given \theta, y) &= N\left(\tilde{y}\given \mu_{\tilde{y}|y}, \sigma^2 V_{\tilde{y}|y}\right) \\
- \mu_{\tilde{y}|y} &= \tilde{X}\beta + V_{y\tilde{y}}^{\top}V_y^{-1}(y-X\beta)\;;\quad V_{\tilde{y}|y} = V_{\tilde{y}} -  V_{y\tilde{y}}^{\top}V_y^{-1}V_{y\tilde{y}}\;.
+ \bmu_{\tilde{y}|y} &= \tilde{\bX}\bbeta + \bV_{y\tilde{y}}^{\top}\bV_y^{-1}(\by-\bX\bbeta)\;;\quad \bV_{\tilde{y}|y} = \bV_{\tilde{y}} -  \bV_{y\tilde{y}}^{\top}\bV_y^{-1}\bV_{y\tilde{y}}\;.
 \end{align*}
 
 \item Posterior predictive density:
 \[
- p(\tilde{y}\given y) = \int N\left(\tilde{y}\given \mu_{\tilde{y}|y}, \sigma^2 V_{\tilde{y}|y}\right) p(\beta, \sigma^2\given y) \mbox{d}\beta \mbox{d}\sigma^2\; .
+ p(\tilde{\by}\given \by) = \int N\left(\tilde{\by}\given \bmu_{\tilde{y}|y}, \sigma^2 \bV_{\tilde{y}|y}\right) p(\bbeta, \sigma^2\given \by) \mbox{d}\bbeta \mbox{d}\sigma^2\; .
 \]
 
 \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
-  \item Draw $\displaystyle \{\beta_{(i)},\sigma^2_{(i)}\} \sim p(\beta,\sigma^2\given y)$
-  \item Compute $\mu_{\tilde{y}|y}$ using $\beta_{(i)}$ and draw $\displaystyle \tilde{y}_{(i)} \sim N(\mu_{\tilde{y}|y}, \sigma^2_{(i)} V_{\tilde{y}})$
+  \item Draw $\displaystyle \{\bbeta_{(i)},\sigma^2_{(i)}\} \sim p(\bbeta,\sigma^2\given \by)$
+  \item Compute $\bmu_{\tilde{y}|y}$ using $\bbeta_{(i)}$ and draw $\displaystyle \tilde{\by}_{(i)} \sim N(\bmu_{\tilde{y}|y}, \sigma^2_{(i)} \bV_{\tilde{y}})$
  \end{enumerate}
  \end{itemize}
 
@@ -270,26 +270,26 @@ where
 
 \begin{frame}{Application to Bayesian Geostatistics}
  
- \begin{itemize}
+ \begin{itemize}\setlength{\itemsep}{0.1cm}  
   \item Consider the spatial regression model
   \begin{align*}
-   y(s_i) = x^{\top}(s_i)\beta + w(s_i) + \epsilon(s_i)\; ,
+   y(s_i) = \bx^{\top}(\bs_i)\bbeta + w(\bs_i) + \epsilon(\bs_i),
   \end{align*}
-  where $w(s_i)$'s are spatial random effects and $\epsilon(s_i)$'s are unstructured errors (``white noise'').
+  where $w(\bs_i)$'s are spatial random effects and $\epsilon(\bs_i)$'s are unstructured errors (``white noise'').
   
-  \item $w = (w(s_1), w(s_2), \ldots, w(s_n))^{\top} \sim N(0, \sigma^2 R(\phi))$
+  \item $\bw = (w(\bs_1), w(\bs_2), \ldots, w(\bs_n))^{\top} \sim N(\bzero, \sigma^2 \bR(\phi))$
   
-  \item $\epsilon = (\epsilon(s_1), \epsilon(s_2), \ldots, \epsilon(s_n))^{\top} \sim N(0, \tau^2 I_n)$
+  \item $\bepsilon = (\epsilon(\bs_1), \epsilon(\bs_2), \ldots, \epsilon(\bs_n))^{\top} \sim N(\bzero, \tau^2 \bI_n)$
   
   \item Integrating out random effects leads to a Bayesian model:
   \[
-    IG(\sigma^2\given a, b) \times N(\beta \given \mu_{\beta}, \sigma^2V_{\beta}) \times N(y\given X\beta, \sigma^2 V_y)
+    IG(\sigma^2\given a, b) \times N(\bbeta \given \bmu_{\beta}, \sigma^2\bV_{\beta}) \times N(\by\given \bX\bbeta, \sigma^2 \bV_y)
   \]
-  where $V_{y} = R(\phi) + \alpha I_n$ and $\alpha = \tau^2/\sigma^2$\; .
+  where $\bV_{y} = \bR(\phi) + \alpha \bI_n$ and $\alpha = \tau^2/\sigma^2$\; .
   
   \item Fixing $\phi$ and $\alpha$ (e.g., from variogram or other EDA) yields a conjugate Bayesian model.
   
-  \item Exact posterior sampling is easily achieved as before.
+  \item Exact posterior sampling is easily achieved as before!
  \end{itemize}
 
 \end{frame}
@@ -297,22 +297,22 @@ where
 \begin{frame}{Inference on spatial random effects}
  
  \begin{itemize}\setlength{\itemsep}{0.4cm}
-  \item Rewrite the model in terms of $w$ as:
+  \item Rewrite the model in terms of $\bw$ as:
  \begin{align*}
-   IG(\sigma^2\given a, b) \times & N(\beta \given \mu_{\beta}, \sigma^2V_{\beta}) \times N(w\given 0, \sigma^2 R(\phi)) \\
-    &\times N(y\given X\beta+w, \tau^2I_n)\; .
+   IG(\sigma^2\given a, b) \times & N(\bbeta \given \bmu_{\beta}, \sigma^2\bV_{\beta}) \times N(\bw\given \bzero, \sigma^2 \bR(\phi)) \\
+    &\times N(\by\given \bX\bbeta+\bw, \tau^2\bI_n)\; .
  \end{align*}
 
-  \item Posterior distribution of spatial random effects $w$:
+  \item Posterior distribution of spatial random effects $\bw$:
   \[
-   p(w\given y) = \int N(w\given Mm,\sigma^2M)\times p(\beta,\sigma^2\given y) \mbox{d}\beta\mbox{d}\sigma^2\;,
+   p(\bw\given \by) = \int N(\bw\given \bM\bm,\sigma^2\bM)\times p(\bbeta,\sigma^2\given \by) \mbox{d}\bbeta\mbox{d}\sigma^2\;,
   \]
-where $\displaystyle m = (1/\alpha)(y-X\beta)$ and $\displaystyle M^{-1} = R^{-1}(\phi) + (1/\alpha)I_n$.
+where $\displaystyle \bm = (1/\alpha)(\by-\bX\bbeta)$ and $\displaystyle \bM^{-1} = \bR^{-1}(\phi) + (1/\alpha)\bI_n$.
 
   \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
-  \item Draw $\displaystyle \{\beta_{(i)},\sigma^2_{(i)}\} \sim p(\beta,\sigma^2\given y)$
-  \item Compute $m$ from $\beta_{(i)}$ and draw $\displaystyle w_{(i)} \sim N(Mm, \sigma^2_{(i)}M)$
+  \item Draw $\displaystyle \{\bbeta_{(i)},\sigma^2_{(i)}\} \sim p(\bbeta,\sigma^2\given \by)$
+  \item Compute $\bm$ from $\bbeta_{(i)}$ and draw $\displaystyle \bw_{(i)} \sim N(\bM\bm, \sigma^2_{(i)}\bM)$
  \end{enumerate}
  \end{itemize}
  
@@ -322,19 +322,19 @@ where $\displaystyle m = (1/\alpha)(y-X\beta)$ and $\displaystyle M^{-1} = R^{-1
 \begin{frame}{Inference on the process}
  
  \begin{itemize}\setlength{\itemsep}{0.4cm}
-  \item Posterior distribution of $w(s_0)$ at new location $s_0$:
+  \item Posterior distribution of $w(\bs_0)$ at new location $\bs_0$:
   \[
-   p(w(s_0)\given y) = \int N(w(s_0)\given \mu_{w(s_0)|w}, \sigma^2_{w(s_0)|w})\times p(\sigma^2, w \given y) \mbox{d}\sigma^2\mbox{d}w\;,
+   p(w(\bs_0)\given \by) = \int N(w(\bs_0)\given \mu_{w(\bs_0)|w}, \sigma^2_{w(\bs_0)|w})\times p(\sigma^2, \bw \given \by) \mbox{d}\sigma^2\mbox{d}\bw\;,
   \]
   where 
   \begin{align*}
-    \mu_{w(s_0)|w} &= r^{\top}(s_0; \phi)R^{-1}(\phi)w\;; \\
-    \sigma^2_{w(s_0)|w} &=  \sigma^2\{1-r^{\top}(s_0; \phi)R^{-1}(\phi)r(s_0,\phi)\}
+    \mu_{w(\bs_0)|w} &= \br^{\top}(\bs_0; \phi)\bR^{-1}(\phi)\bw\;; \\
+    \sigma^2_{w(\bs_0)|w} &=  \sigma^2\{1-\br^{\top}(\bs_0; \phi)\bR^{-1}(\phi)\br(\bs_0,\phi)\}
   \end{align*}
   \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
-  \item Compute $ \mu_{w(s_0)|w}$ and $\sigma^2_{w(s_0)|w}$ from $w_{(i)}$ and $\sigma^2_{(i)}$. 
-  \item Draw $\displaystyle w_{(i)}(s_0) \sim N(\mu_{w(s_0)|w}, \sigma^2_{w(s_0)|w})$.
+  \item Compute $ \mu_{w(\bs_0)|w}$ and $\sigma^2_{w(\bs_0)|w}$ from $\bw_{(i)}$ and $\sigma^2_{(i)}$. 
+  \item Draw $\displaystyle w_{(i)}(\bs_0) \sim N(\mu_{w(\bs_0)|w}, \sigma^2_{w(\bs_0)|w})$.
  \end{enumerate}
  \end{itemize}
  
@@ -343,14 +343,14 @@ where $\displaystyle m = (1/\alpha)(y-X\beta)$ and $\displaystyle M^{-1} = R^{-1
 \begin{frame}{Bayesian ``kriging'' or prediction}
  
  \begin{itemize}\setlength{\itemsep}{0.4cm}
-  \item Posterior predictive distribution at new location $s_0$ is $p(y(s_0)\given y)$:
+  \item Posterior predictive distribution at new location $\bs_0$ is $p(y(\bs_0)\given \by)$:
   \[
-   \int N(y(s_0)\given x^{\top}(s_0)\beta + w(s_0), \alpha \sigma^2)\times p(\beta, \sigma^2, w \given y)\mbox{d}\beta \mbox{d}\sigma^2\mbox{d}w\;,
+   \int N(y(\bs_0)\given \bx^{\top}(s_0)\bbeta + w(\bs_0), \alpha \sigma^2)\times p(\bbeta, \sigma^2, \bw \given \by)\mbox{d}\bbeta \mbox{d}\sigma^2\mbox{d}\bw\;,
   \]
   \item For each $i=1,2,\ldots,N$ do the following: 
  \begin{enumerate}\setlength{\itemsep}{0.25cm}
 %  \item Compute $ \mu_{w(s_0)|w}$ and $\sigma^2_{w(s_0)|w}$ from $w_{(i)}$ and $\sigma^2_{(i)}$. 
-  \item Draw $\displaystyle y_{(i)}(s_0) \sim N(x^{\top}(s_0)\beta_{(i)} + w_{(i)}(s_0), \alpha\sigma^2_{(i)})$.
+  \item Draw $\displaystyle y_{(i)}(\bs_0) \sim N(\bx^{\top}(\bs_0)\bbeta_{(i)} + w_{(i)}(s_0), \alpha\sigma^2_{(i)})$.
  \end{enumerate}
  \end{itemize}
  
@@ -364,25 +364,25 @@ where $\displaystyle m = (1/\alpha)(y-X\beta)$ and $\displaystyle M^{-1} = R^{-1
 \begin{itemize}\setlength{\itemsep}{0.4cm} 
 \item Let $\theta=(\theta_1,\ldots,\theta_p)$ be the parameters in our model.
 
-\item $\theta^{(0)}=(\theta_{1}^{(0)},\ldots,\theta_{p}^{(0)})$ 
+\item Initialize with starting values $\theta^{(0)}=(\theta_{1}^{(0)},\ldots,\theta_{p}^{(0)})$ 
 
-\item For $j=1,\ldots,M$, update successively using the \emph{full conditional} distributions:
-\begin{description}
+\item For $j=1,\ldots,N$, update successively using the \emph{full conditional} distributions:
+\begin{description}\setlength{\itemsep}{0.1cm} 
 \item $\theta_{1}^{(j)} \sim
-p(\theta_{1}^{(j)}\given\theta_{2}^{(j-1)},\ldots,\theta_{p}^{(j-1)},y)$
+p(\theta_{1}^{(j)}\given\theta_{2}^{(j-1)},\ldots,\theta_{p}^{(j-1)},\by)$
 
 \item $\theta_{2}^{(j)} \sim
-p(\theta_{2}\given\theta_{1}^{(j)},\theta_{3}^{(j-1)},\ldots,\theta_{p}^{(j-1)}, y)$
+p(\theta_{2}\given\theta_{1}^{(j)},\theta_{3}^{(j-1)},\ldots,\theta_{p}^{(j-1)}, \by)$
 
 \item $\vdots$
 
 \item (the generic $k^{th}$ element) $\theta_{k}^{(j)} \sim
-p(\theta_{k}|\theta_{1}^{(j)},\ldots,\theta_{k-1}^{(j)},\theta_{k+1}^{(j-1)},\ldots,\theta_{p}^{(j-1)},y)$
+p(\theta_{k}|\theta_{1}^{(j)},\ldots,\theta_{k-1}^{(j)},\theta_{k+1}^{(j-1)},\ldots,\theta_{p}^{(j-1)},\by)$
 
 \item $\vdots$
 
 \item $\theta_{p}^{(j)} \sim
-p(\theta_{p}\given\theta_{1}^{(j)},\ldots,\theta_{p-1}^{(j)}, y)$
+p(\theta_{p}\given\theta_{1}^{(j)},\ldots,\theta_{p-1}^{(j)}, \by)$
 \end{description}
 \end{itemize}
 }
@@ -419,7 +419,7 @@ when these are not in closed form. A more general and extremely
 powerful - and often easier to code - algorithm is the
 Metropolis-Hastings (MH) algorithm.
 
-\item This algorithm also constructs a Markov Chain, but does not necessarily care about full conditionals.
+\item This algorithm also constructs a Markov chain, but does not necessarily care about full conditionals.
 
 \item Popular approach: Embed Metropolis steps within Gibbs to draw from full conditionals that are not accessible to directly generate from. 
 \end{itemize}
@@ -441,7 +441,7 @@ r =
 \item If $r \geq 1$ then set $\theta^{(j)}=\theta^{\ast}$. If $r \leq 1$ then draw $U\sim(0,1)$. If $U \leq r$ then
 $\theta^{(j)}=\theta^{\ast}$. Otherwise, $\theta^{(j)}=\theta^{(j-1)}$.
 
-\item Repeat for $j=1,\ldots M$. This yields $\theta^{(1)},\ldots,\theta^{(M)}$, which, after a burn-in period, will be samples from the true posterior distribution. It is important to monitor the acceptance ratio $r$ of the sampler through the iterations. Rough recommendations: for vector updates $r\approx 20\%$., for scalar updates $r\approx 40\%$. This can be controlled by ``tuning'' $\nu$.
+\item Repeat for $j=1,\ldots N$. This yields $\theta^{(1)},\ldots,\theta^{(N)}$, which, after a burn-in period, will be samples from the true posterior distribution. It is important to monitor the acceptance ratio $r$ of the sampler through the iterations. Rough recommendations: for vector updates $r\approx 20\%$., for scalar updates $r\approx 40\%$. This can be controlled by ``tuning'' $\nu$.
 
 \item Popular approach: Embed Metropolis steps within Gibbs to draw from full conditionals that are not accessible to directly generate from. 
 

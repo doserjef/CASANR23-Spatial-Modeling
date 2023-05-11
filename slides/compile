@@ -1,9 +1,7 @@
 /usr/bin/pdflatex IntroToGeostatistics.tex
 /usr/bin/pdflatex Bayesian_Spatial_Linear_Regression.tex
-/usr/bin/pdflatex Low_Rank_Predictive_Process.tex
-/usr/bin/pdflatex SpatialNNGP.tex
+/usr/bin/pdflatex LargeSpatial.tex
 /usr/bin/pdflatex CompNotes.tex
-/usr/bin/pdflatex ConjugateBayes.tex
 /usr/bin/pdflatex SpatialGLMMs.tex
 /usr/bin/pdflatex SpatialFactorModels.tex
 /usr/bin/pdflatex SVCs.tex

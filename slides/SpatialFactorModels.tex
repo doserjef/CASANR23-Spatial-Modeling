@@ -34,25 +34,25 @@
 \begin{frame}{Multivariate spatial generalized linear model}
 
 \begin{itemize}
-    \item Spatial generalized linear model for $m$-variate spatial data for $j = 1, 2, \dots, m$ and $i = 1, \dots, n$: 
+    \item Spatial generalized linear model for $h$-variate spatial data for $j = 1, 2, \dots, h$ and $i = 1, \dots, n$: 
     \begin{align*}
 	    y_j(\bs_i) &\sim f(\mu_j(\bs_i), \tau_j) \\
 	    \mu_j(\bs_i) &= g^{-1}(\eta_j(\bs_i)) = \bx(\bs_i)^\top\bbeta_j + \text{w}^\ast_j(\bs_i)
     \end{align*}
-    \item We can imagine modeling $\bw^\ast(\bs_i) = (\text{w}^\ast_1(\bs_i), \text{w}^\ast_2(\bs_i), \ldots, \text{w}^\ast_m(\bs_i))'$ as an $m$-variate Gaussian process \pause
-    \item Could model using Multivariate NNGP as disussed previously with SVCs, works well when $m < 5$. \pause
-    \item But what about when $m$ is large (e.g,. 10, 100)?
+    \item We can imagine modeling $\bw^\ast(\bs_i) = (\text{w}^\ast_1(\bs_i), \text{w}^\ast_2(\bs_i), \ldots, \text{w}^\ast_h(\bs_i))'$ as an $h$-variate Gaussian process \pause
+    \item Could model using Multivariate NNGP as disussed previously with SVCs, works well when $h < 5$. \pause
+    \item But what about when $h$ is large (e.g,. 10, 100)?
 \end{itemize}
 \end{frame}
 
 \begin{frame}{Spatial Factor Model}
     \begin{itemize}
     \item Approximates the dependence between multivariate (spatially-dependent) outcomes through a linear combination of a (much) lower-dimensional set of spatial factors \pause
-    \item We represent the $m \times 1$ vector $\bw^\ast(\bs_i)$ as a linear combination of latent spatial factors and factor loadings: 
+    \item We represent the $h \times 1$ vector $\bw^\ast(\bs_i)$ as a linear combination of latent spatial factors and factor loadings: 
 	    \begin{align*}
                  \bw^\ast(\bs) = \bLambda\bw(\bs_i)
 	    \end{align*}
-    \item $\bLambda$ is an $m \times q$ loadings matrix (tall and skinny) and $\bw(\bs_j)$ is a $q \times 1$ vector of realizations from $q$ independent spatial GPs \pause
+    \item $\bLambda$ is an $h \times q$ loadings matrix (tall and skinny) and $\bw(\bs_j)$ is a $q \times 1$ vector of realizations from $q$ independent spatial GPs \pause
     \item In traditional factor analysis, $\bw(\bs_i)$ are realizations from independent standard normal random variables.
     \end{itemize}
 \end{frame}

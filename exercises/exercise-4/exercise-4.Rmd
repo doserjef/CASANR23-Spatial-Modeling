@@ -43,7 +43,7 @@ str(data.list)
 
 The data are stored in the format required for `spOccupancy`, which is a list object with the following three components: 
 
-+ `y`: an $m \times n$ matrix comprising the observed presence (1) or absence (0) of each of the $m$ species at each of the $n$ spatial locations. 
++ `y`: an $h \times n$ matrix comprising the observed presence (1) or absence (0) of each of the $h$ species at each of the $n$ spatial locations. 
 + `coords`: an $n \times 2$ matrix of spatial coordinates in a projected coordinate system. Here, the coordinates are specified in Albers Equal Area.
 + `covs`: a $n \times p$ matrix or data frame of potential covariates for use in the model. Here we include a variety of 30-year climate normals that we believe may be useful in explaining variability in the distributions of the ten species across Vermont. These include: (1) `tmax`: maximum temperature; (2) `tmin`: minimum temperature; (3) `prcp`: precipitation; (4) `pet`: potential evapotranspiration; (5) `aet`: actual evapotranspiration; (6) `water_deficit`: climate water deficit; (7) `vpd`: vapor pressure deficit; and (8) `elev`: elevation.
 

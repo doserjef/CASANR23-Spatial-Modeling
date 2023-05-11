@@ -1,3 +1,16 @@
 exercises/exercise-4/compile
 exercises/exercise-4/extract-data.R
 exercises/exercise-4/get-pred-data.R
+exercises/exercise-5/compile
+slides/*.aux
+slides/*.tex
+slides/*.tex~
+slides/compile*
+slides/*.log
+slides/*.nav
+slides/*.out
+slides/*.snm
+slides/*.toc
+slides/*.sty
+slides/movie/
+tmp.txt

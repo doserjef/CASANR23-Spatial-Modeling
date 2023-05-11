@@ -4,7 +4,7 @@
 \usepackage{graphicx}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{amssymb}
+
 \usepackage{tabularx}
 \usepackage{epstopdf}
 \usepackage{overpic}
@@ -15,6 +15,8 @@
 \usepackage{cancel}
 \usepackage{changepage}
 
+\usepackage{tikz}
+\usepackage[customcolors]{hf-tikz} 
 
 \usepackage{lmodern}
 %\usepackage{mystyle}
@@ -81,7 +83,6 @@
 \newcommand{\blambda}{ \mbox{\boldmath $ \lambda $} }
 \newcommand{\bnu}{ \mbox{\boldmath $\nu$} }
 \newcommand{\bmu}{ \mbox{\boldmath $\mu$} }
-\newcommand{\bm}{\boldmath}
 \newcommand{\bGam}{ \mbox{\boldmath $\Gamma$} }
 \newcommand{\bSig}{ \mbox{\boldmath $\Sigma$} }
 \newcommand{\bSigma}{ \mbox{\boldmath $\Sigma$} }
@@ -101,6 +102,8 @@
 \newcommand{\sis}{\sigma^2}
 \newcommand{\bOmega}{\mbox{\boldmath $\Omega$} }
 \newcommand{\bPsi}{ {\boldsymbol \Psi} }
+\newcommand{\btkt}{\boldsymbol{\tilde{K}}_\theta}
+\newcommand{\pg}{P{\'o}lya-Gamma }
 
 \newcommand{\bzero}{\textbf{0}}
 \newcommand{\bones}{\textbf{1}}
@@ -136,13 +139,16 @@
 \newcommand{\bL}{\textbf{L}}
 \newcommand{\br}{\textbf{r}}
 \newcommand{\bR}{\textbf{R}}
-
+\newcommand{\bm}{\textbf{m}}
+\newcommand{\bM}{\textbf{M}}
 \newcommand{\given}{\,|\,}
 \newcommand{\T}{\top}
-
+\newcommand{\bV}{\textbf{V}}
+\newcommand{\bJ}{\textbf{J}}
 \newcommand{\blue}[1]{{\color{RoyalBlue!90} #1}}
 \newcommand{\red}[1]{{\color{Red} #1}}
 \newcommand{\green}[1]{{\color{Green} #1}}
+\newcommand{\orange}[1]{{\color{Orange} #1}}
 \newcommand{\titl}[1]{{\begin{large}\begin{center}#1\end{center}\end{large}}}
 
 \newcommand{\tildea}{\tilde{a}}
@@ -161,7 +167,6 @@
 \newcommand{\sigs}{\sigma^2}
 \newcommand{\taus}{\tau^2}
 \newcommand{\iid}{\stackrel{\mathrm{iid}}{\sim}}
-\newcommand{\pg}{P{\'o}lya-Gamma }
 
 %\newcommand{\calS}{{\cal S}}
 \newcommand{\calC}{{\cal C}}

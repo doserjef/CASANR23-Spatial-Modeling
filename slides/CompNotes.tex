@@ -165,18 +165,18 @@ So what kind of speed up to expect from threaded BLAS and LAPACK libraries.
 
 The BLAS and LAPACK that ``ships'' with \texttt{R} is single-threaded, but these can be replaced with multi-threaded libraries.
 
-\begin{itemize}\setlength{\itemsep}{0.4cm}
+\begin{itemize}\setlength{\itemsep}{0.1cm}
 \item[]\textbf{Windows}
-  \begin{itemize}\setlength{\itemsep}{0.4cm}
+  \begin{itemize}
   \item Microsoft \texttt{R} Open: The Enhanced \texttt{R} Distribution \url{https://mran.microsoft.com/open} comes with MLK \url{https://software.intel.com/en-us/mkl}.
   \item Replace existing \texttt{R}'s \texttt{libRblas.so} with OpenBLAS library \texttt{libopenblas.so}. OpenBLAS is available here \url{http://www.openblas.net}.
   \end{itemize}
 \item[]\textbf{Max OS X}
   \begin{itemize}
-  \item Mac vecLib obtained via XCode. Use install notes \url{http://blue.for.msu.edu/GAU19/BLASHints.txt}. 
+  \item Mac vecLib obtained via XCode. Use install notes \href{https://cran.r-project.org/bin/macosx/RMacOSX-FAQ.html\#Which-BLAS-is-used-and-how-can-it-be-changed\_003f}{\beamergotobutton{here}}. 
   \end{itemize}
 \item[]\textbf{Linux/Unix}
-  \begin{itemize}\setlength{\itemsep}{0.4cm}
+  \begin{itemize}
   \item MKL, OpenBLAS, ACML (compile \texttt{R} against MLK or post compile symbolic link of \texttt{libRblas.so} to \texttt{libopenblas.so}).
   \item Some additional gains using Intel icc and ifort compilers.
   \end{itemize}
