@@ -48,7 +48,7 @@ if (length(new.packages) > 0) {
         * [Markdown doc](exercises/exercise-2/CO-temp.html)
         * Code [zip](exercises/exercise-2.zip) or [tar.gz](exercises/exercise-2.tar.gz)
 * 10:00 - 10:30 Break with snacks and registration
-* 10:30 - 12:00 Scalable Bayesian models for big spatial data [slides/LargeSpatial.pdf]
+* 10:30 - 12:00 Scalable Bayesian models for big spatial data [slides](slides/LargeSpatial.pdf)
     * Exercise 3
       * [Markdown doc](exercises/exercise-3/harvard-Forest.html)
       * Code [zip](exercises/exercise-3.zip) or [tar.gz](exercises/exercise-3.tar.gz)
