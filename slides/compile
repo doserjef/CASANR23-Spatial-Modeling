@@ -1,7 +1,14 @@
 /usr/bin/pdflatex IntroToGeostatistics.tex
-/usr/bin/pdflatex Bayesian_Spatial_Linear_Regression.tex
+/usr/bin/pdflatex BayesianSpatialLinearRegression.tex
 /usr/bin/pdflatex LargeSpatial.tex
 /usr/bin/pdflatex CompNotes.tex
 /usr/bin/pdflatex SpatialGLMMs.tex
 /usr/bin/pdflatex SpatialFactorModels.tex
 /usr/bin/pdflatex SVCs.tex
+
+pdftk IntroToGeostatistics.pdf BayesianSpatialLinearRegression.pdf LargeSpatial.pdf CompNotes.pdf SpatialGLMMs.pdf SpatialFactorModels.pdf SVCs.pdf cat output all_slides.pdf
+
+pdfjam --nup 2x3 all_slides.pdf --outfile all_slides_3x2.pdf
+pdfjam --nup 2x2 all_slides.pdf --outfile all_slides_2x2.pdf --landscape
+
+

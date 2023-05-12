@@ -1,6 +1,10 @@
 /usr/bin/pdflatex IntroToGeostatistics.tex
-/usr/bin/pdflatex Bayesian_Spatial_Linear_Regression.tex
-/usr/bin/pdflatex Low_Rank_Predictive_Process.tex
-/usr/bin/pdflatex SpatialNNGP.tex
+/usr/bin/pdflatex BayesianSpatialLinearRegression.tex
+/usr/bin/pdflatex LargeSpatial.tex
 /usr/bin/pdflatex CompNotes.tex
-/usr/bin/pdflatex ConjugateBayes.tex
+
+pdftk IntroToGeostatistics.pdf BayesianSpatialLinearRegression.pdf LargeSpatial.pdf CompNotes.pdf cat output all_slides.pdf
+
+pdfjam --nup 2x2 all_slides.pdf --outfile all_slides_2x2.pdf --landscape
+pdfjam --nup 3x2 all_slides.pdf --outfile all_slides_3x2.pdf
+
