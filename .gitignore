@@ -15,3 +15,4 @@ slides/*.sty
 slides/movie/
 tmp.txt
 compile
+index-full.Rmd
