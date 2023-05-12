@@ -29,7 +29,7 @@ In the exercises, we will use additional R packages for exploratory data analysi
 ```{r, eval = FALSE}
 required.packages <- c('coda', 'MCMCvis', 'ggplot2', 'pals', 'sf', 'maps', 'stars', 
                        'MBA', 'geoR', 'raster', 'leaflet', 'sp', 'fields', 'classInt')
-new.packages <- required.packages[!(required.pkgs %in% installed.packages()[, 'Package'])]
+new.packages <- required.packages[!(required.packages %in% installed.packages()[, 'Package'])]
 if (length(new.packages) > 0) {
   install.packages(new.packages)
 }
