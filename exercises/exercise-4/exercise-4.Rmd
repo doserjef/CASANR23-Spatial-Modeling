@@ -1,6 +1,6 @@
 ---
 title: "Modeling tree distributions across Vermont"
-author: "Andrew O. Finley and Jeffrey W. Doser"
+author: "Jeffrey W. Doser and Andrew O. Finley"
 date: "May 15, 2023"
 output: html_document
 bibliography: [references.bib]
