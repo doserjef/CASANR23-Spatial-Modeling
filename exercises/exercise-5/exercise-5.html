@@ -372,7 +372,7 @@ pre code {
 
 <div id="introduction" class="section level1">
 <h1>Introduction</h1>
-<p>In this exercise, our goal is to fit a spatially-varying coefficient model to assess if there is any spatial variation in a ten-year (2010-2019) occurrence trend of the Eastern Wood-pewee across the eastern US. We will fit a model that explicitly accommodates observational biases that occur when collecting data on many wildlife species (i.e., imperfect detection, or failing to observe a species at a location when it is truly present). The data we use come from the North American Breeding Bird Survey, in which trained volunteers count the number of birds, identified to species, at approximately 3000 locations (called “routes”) across North America each year since the 1960s. Here we use presence/absence data from <span class="math inline">\(n = 500\)</span> sites acrosss the eastern US that are within the known distribution of the Eastern Wood-pewee, which are surveyed varying amounts over a ten year period from 2010-2019. At each site during each year it is sampled, we use data from <span class="math inline">\(K = 5\)</span> replicate surveys. We assume the true presence/absence status of the bird at a given location does not change over the 5 replicate surveys, and that any variation in the data across the replicate surveys is related to observational error. In the wildlife ecology literature, this type of zero-inflated mixture model is referred to as an “occupancy model”.</p>
+<p>In this exercise, our goal is to fit a spatially-varying coefficient model to assess if there is any spatial variation in a ten-year (2010-2019) occurrence trend of the Eastern Wood-pewee across the eastern US. We will fit a model that explicitly accommodates observational biases that occur when collecting data on many wildlife species (i.e., imperfect detection, or failing to observe a species at a location when it is truly present). The data we use come from the North American Breeding Bird Survey, in which trained volunteers count the number of birds, identified to species, at approximately 3000 locations (called “routes”) across North America each year since the 1960s. Here we use presence/absence data from <span class="math inline">\(n = 500\)</span> sites across the eastern US that are within the known distribution of the Eastern Wood-pewee, which are surveyed varying amounts over a ten year period from 2010-2019. At each site during each year it is sampled, we use data from <span class="math inline">\(K = 5\)</span> replicate surveys. We assume the true presence/absence status of the bird at a given location does not change over the 5 replicate surveys, and that any variation in the data across the replicate surveys is related to observational error. In the wildlife ecology literature, this type of zero-inflated mixture model is referred to as an “occupancy model”.</p>
 <p>We will fit the model using the function <code>svcTPGOcc()</code> in the <code>spOccupancy</code> package, where the <code>svc</code> stands for spatially-varying coefficients, the <code>T</code> indicates we’re fitting a model that has a temporal dimension to it, <code>PG</code> indicates we’re using Pólya-Gamma data augmentation <span class="citation">(Polson, Scott, and Windle 2013)</span>, and <code>Occ</code> stands for occupancy model. Below we first load the packages we will use in this example.</p>
 <pre class="r"><code>set.seed(111)
 library(spOccupancy)
@@ -578,7 +578,7 @@ Burn-in: 5000
 Thinning Rate: 5
 Number of Chains: 1
 Total Posterior Samples: 500
-Run Time (min): 4.069
+Run Time (min): 3.8871
 
 Occurrence (logit scale): 
                 Mean     SD    2.5%     50%  97.5% Rhat ESS
@@ -708,7 +708,7 @@ Generating latent occupancy state</code></pre>
  $ z.0.samples  : num [1:500, 1:4474, 1:10] 1 1 1 1 1 1 1 1 1 1 ...
  $ w.0.samples  : num [1:500, 1:2, 1:4474] 7.79 5.9 5.4 1.95 5.39 ...
  $ psi.0.samples: num [1:500, 1:4474, 1:10] 1 0.999 1 0.992 1 ...
- $ run.time     : &#39;proc_time&#39; Named num [1:5] 19.42 6.67 14.88 0 0
+ $ run.time     : &#39;proc_time&#39; Named num [1:5] 16.79 5.75 12.81 0 0
   ..- attr(*, &quot;names&quot;)= chr [1:5] &quot;user.self&quot; &quot;sys.self&quot; &quot;elapsed&quot; &quot;user.child&quot; ...
  $ call         : language predict.svcTPGOcc(object = out, X.0 = X.0, coords.0 = coords.0, t.cols = 1:10)
  $ object.class : chr &quot;svcTPGOcc&quot;
