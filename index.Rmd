@@ -35,6 +35,7 @@ if (length(new.packages) > 0) {
 }
 ```
 
+
 ## Course schedule (download full zip on [the course Github page](https://github.com/doserjef/CASANR23-Spatial-Modeling))
 
 [Full PDF of all course slides](slides/all_slides.pdf)
@@ -50,7 +51,7 @@ if (length(new.packages) > 0) {
 * 10:00 - 10:30 Break with snacks and registration
 * 10:30 - 12:00 Scalable Bayesian models for big spatial data [slides](slides/LargeSpatial.pdf)
     * Exercise 3
-      * [Markdown doc](exercises/exercise-3/harvard-Forest.html)
+      * [Markdown doc](exercises/exercise-3/Harvard-Forest.html)
       * Code [zip](exercises/exercise-3.zip) or [tar.gz](exercises/exercise-3.tar.gz)
 * 12:00 - 1:30 Group lunch 
 * 1:30 - 2:00 Advanced computing environments [slides](slides/CompNotes.pdf)
