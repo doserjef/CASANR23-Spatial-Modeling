@@ -35,6 +35,7 @@ if (length(new.packages) > 0) {
 }
 ```
 
+
 ## Course schedule (download full zip on [the course Github page](https://github.com/doserjef/CASANR23-Spatial-Modeling))
 
 [Full PDF of all course slides](slides/all_slides.pdf)
