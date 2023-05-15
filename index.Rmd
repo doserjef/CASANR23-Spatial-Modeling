@@ -41,7 +41,7 @@ if (length(new.packages) > 0) {
   * Introduction to geostatistics [slides](slides/IntroToGeostatistics.pdf)
       * Exercise 1
         * Code [zip](exercises/exercise-1.zip) or [tar.gz](exercises/exercise-1.tar.gz)
-  * Bayesian spatial linear regression [slides](slides/Bayesian_Spatial_Linear_Regression.pdf)
+  * Bayesian spatial linear regression [slides](slides/BayesianSpatialLinearRegression.pdf)
       * Exercise 2
         * [Markdown doc](exercises/exercise-2/CO-temp.html)
         * Code [zip](exercises/exercise-2.zip) or [tar.gz](exercises/exercise-2.tar.gz)
@@ -61,4 +61,4 @@ if (length(new.packages) > 0) {
 * 3:30 - 4:30 Application of spatially-varying coefficient models [slides](slides/SVCs.pdf)
     * Exercise 5
       * [R Markdown doc](exercises/exercise-5/exercise-5.html)
-      * Code [zip](exercises/exercise-4.zip) or [tar.gz](exercises/exercises-4.tar.gz)
+      * Code [zip](exercises/exercise-5.zip) or [tar.gz](exercises/exercises-5.tar.gz)
