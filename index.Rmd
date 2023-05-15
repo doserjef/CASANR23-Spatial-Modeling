@@ -61,4 +61,4 @@ if (length(new.packages) > 0) {
 * 3:30 - 4:30 Application of spatially-varying coefficient models [slides](slides/SVCs.pdf)
     * Exercise 5
       * [R Markdown doc](exercises/exercise-5/exercise-5.html)
-      * Code [zip](exercises/exercise-5.zip) or [tar.gz](exercises/exercises-5.tar.gz)
+      * Code [zip](exercises/exercise-5.zip) or [tar.gz](exercises/exercise-5.tar.gz)
