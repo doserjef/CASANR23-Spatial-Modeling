@@ -1,9 +1,11 @@
 ---
 title: "Simulated data and forest canopy height analyses"
-output: html_document
+output: 
+    html_document:
+      code_folding: show
 ---
 
-```{r global_options, echo=FALSE}
+```{r global_options, echo=FALSE, purl=FALSE}
 knitr::opts_chunk$set(comment = NA, tidy = TRUE)
 ```
 
@@ -11,7 +13,7 @@ knitr::opts_chunk$set(comment = NA, tidy = TRUE)
 # Simulated data analysis
 
 ## Make some data
-```{r}
+```{r simulate_data}
 rmvn <- function(n, mu=0, V = matrix(1)){
   p <- length(mu)
   if(any(is.na(match(dim(V),p))))
@@ -38,8 +40,8 @@ w <- rmvn(1, rep(0,n), sigma.sq*R)
 y <- rnorm(n, x%*%B + w, sqrt(tau.sq))
 ```
 
-## Fit a Sequential NNGP model
-```{r, fig.align="center", message=FALSE}
+## Fit a Latent NNGP model
+```{r fit_latent_nngp, fig.align="center", message=FALSE}
 library(spNNGP)
 
 n.samples <- 500
@@ -62,7 +64,7 @@ plot(w, apply(m.s$p.w.samples, 1, median),  xlab="True w", ylab="Posterior media
 ```
 
 Take a look at the neighbor ordering (just for fun)
-```{r}
+```{r look_at_neighbor_info}
 names(m.s$neighbor.info)
 ord <- m.s$neighbor.info$ord
 n.indx <- m.s$neighbor.info$n.indx
@@ -88,7 +90,7 @@ abline(v=m.s$coords[ord,][s,1], lty=3)
 Here we consider forest canopy height (m) data measured using the NASA Goddard's LiDAR Hyperspectral and Thermal (G-LiHT) Airborne Imager over a subset of Harvard Forest Simes Tract, MA, collected in Summer 2012. This is a sampling LiDAR system that only records strips of canopy height across the landscape. We would like to use the Harvard Forest data to assess if the current density of LiDAR measurements can be reduced, which would allow for wider strips to be collected. Ultimately, interest is in creating wall-to-wall maps of forest canopy height with associated uncertainty.
 
 Let's load the necessary packages and canopy height data which are part of the `spNNGP` package. Here too, we subset the data and divide it into a model and testing set.
-```{r, message=FALSE}
+```{r harvard_forest_data, message=FALSE}
 library(geoR)
 library(raster)
 library(leaflet)
@@ -107,7 +109,7 @@ CHM.ho <- CHM[ho,]
 
 Let's again start with a `leaflet` basemap then overlay the canopy height data. Recall, `leaflet` maps expect data to be in geographic coordinate system (i.e., longitude and latitude), so we first need reproject the CHM data (just for visualization purposes, we'll fit the model using the projected coordinates).
 
-```{r}
+```{r reproject_and_map, warning=FALSE}
 chm.r <- rasterFromXYZ(CHM)
 proj4string(chm.r) <- "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
 chm.r.ll <- projectRaster(chm.r, crs="+proj=longlat +datum=WGS84")
@@ -128,19 +130,19 @@ base.map %>%
     )
 ```
 
-Let's try and fit a variogram to the data to get a sense of the spatial structure. These `variog` function calculates the $n\times n$ Euclidean distance matrix to construct the empirical variogram. When $n$ is large this will you will likely run out of memory, so you might need to consider only a subset of your data.
+Let's try and fit a variogram to the data to get a sense of the spatial structure. These `variog` function calculates the $n\times n$ Euclidean distance matrix to construct the empirical variogram. When $n$ is large will you will likely run out of memory, so you might need to consider only a subset of your data.
 
-```{r, fig.align="center"}
+```{r variogram_eda, fig.align="center"}
 sub <- 1:10000
 
-#note, max intesite distance is ~1.5km
+#note, max intersite distance is ~1.5km
 v <- variog(coords=CHM.mod[sub,1:2], data=CHM.mod[sub,3], uvec=(seq(0, 500, length=30))) 
 
 plot(v, xlab="Distance (m)")
 ```
 
 Now let's fit some spatial regression models using NNGP random effects.
-```{r}
+```{r fit_response_nngp}
 n.samples <- 1000
 
 starting <- list("phi"=3/50, "sigma.sq"=15, "tau.sq"=2.5)
@@ -168,7 +170,7 @@ m.r$run.time
 
 Now prediction for the holdout set. 
 
-```{r, fig.align="center"}
+```{r predict_for_holdout, fig.align="center"}
 burn.in <- floor(0.5*n.samples)
 
 p.r <- predict(m.r, X.0 = as.matrix(rep(1,nrow(CHM.ho))), coords.0 = CHM.ho[,c("x","y")],

@@ -35,16 +35,30 @@ if (length(new.packages) > 0) {
 }
 ```
 
-## Tentative course schedule 
+## Course schedule (download full zip on [the course Github page](https://github.com/doserjef/CASANR23-Spatial-Modeling))
 
 * 8:30 - 10:00 Introduction to point-referenced spatial data 
-  * Introduction to geostatistics
-  * Bayesian spatial linear regression
+  * Introduction to geostatistics [slides](slides/IntroToGeostatistics.pdf)
+      * Exercise 1
+        * Code [zip](exercises/exercise-1.zip) or [tar.gz](exercises/exercise-1.tar.gz)
+  * Bayesian spatial linear regression [slides](slides/Bayesian_Spatial_Linear_Regression.pdf)
+      * Exercise 2
+        * [Markdown doc](exercises/exercise-2/CO-temp.html)
+        * Code [zip](exercises/exercise-2.zip) or [tar.gz](exercises/exercise-2.tar.gz)
 * 10:00 - 10:30 Break with snacks and registration
-* 10:30 - 12:00 Scalable Bayesian models for big spatial data
+* 10:30 - 12:00 Scalable Bayesian models for big spatial data [slides](slides/LargeSpatial.pdf)
+    * Exercise 3
+      * [Markdown doc](exercises/exercise-3/harvard-Forest.html)
+      * Code [zip](exercises/exercise-3.zip) or [tar.gz](exercises/exercise-3.tar.gz)
 * 12:00 - 1:30 Group lunch 
-* 1:30 - 2:00 Advanced computing environments
-* 2:00 - 2:15 Modeling non-Gaussian spatial data
-* 2:15 - 3:00 Spatial factor models for multivariate spatial data
+* 1:30 - 2:00 Advanced computing environments [slides](slides/CompNotes.pdf)
+* 2:00 - 2:15 Modeling non-Gaussian spatial data [slides](slides/SpatialGLMMs.pdf)
+* 2:15 - 3:00 Spatial factor models for multivariate spatial data [slides](slides/SpatialFactorModels.pdf)
+  * Exercise 4
+    * [R Markdown doc](exercises/exercise-4/exercise-4.html)
+    * Code [zip](exercises/exercise-4.zip) or [tar.gz](exercises/exercise-4.tar.gz)
 * 3:00 - 3:30 Break with snacks and registration
-* 3:30 - 4:30 Application of spatially-varying coefficient models
+* 3:30 - 4:30 Application of spatially-varying coefficient models [slides](slides/SVCs.pdf)
+    * Exercise 5
+      * [R Markdown doc](exercises/exercise-5/exercise-5.html)
+      * Code [zip](exercises/exercise-4.zip) or [tar.gz](exercises/exercises-4.tar.gz)

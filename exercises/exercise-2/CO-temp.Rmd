@@ -1,18 +1,18 @@
 ---
 title: "Colorado temperature analysis"
-output: html_document
+output: 
+    html_document:
+      code_folding: show
 ---
 
-```{r global_options, echo=FALSE}
+```{r global_options, echo=FALSE, purl=FALSE}
 knitr::opts_chunk$set(comment = NA, tidy = TRUE)
 ```
 
 ## Colorado spring temperature data
 These data were originally part of the `fields` package's `COmonthlyMet` dataset.
-```{r, download_data}
+```{r, load_data}
 rm(list=ls())
-library(downloader)
-download(url="https://www.finley-lab.com/files/CO-temp-data.RData", destfile="CO-temp-data.RData")
 load("CO-temp-data.RData")
 ls()
 ```
@@ -21,7 +21,7 @@ Our goal is to create a complete prediction surface of minimum spring temperatur
 
 We begin by loading the necessary packages.
 
-```{r, laod_packages, message=FALSE}
+```{r, load_packages, message=FALSE}
 library(spBayes)
 library(MBA)
 library(geoR)
@@ -30,7 +30,7 @@ library(leaflet)
 library(sp)
 ```
 
-Next, set up a `leaflet` basemap to help visualize the data and model output. We'll make heavy use of the pipe operator `%>%` to reduce clutter.
+Next, set up a `leaflet` basemap to help visualize the data and model output. We'll make heavy use of the pipe operator `%>%` in the leaflet code to reduce clutter.
 
 ```{r, leaflet_basemap}
 blue.red <-  c("#2c7bb6","#abd9e9","#ffffbf","#fdae61","#d7191c")
@@ -62,20 +62,21 @@ lm.obj <- lm(temp ~ lon + lat, data=coords)
 summary(lm.obj)
 ```
 
-We'll reproject the geographic coordinates (i.e., longitude and latitude) to a coordinate system that provides a bit more intuition about distance and reduces spatial distortion. Here we selected Universal Transverse Mercator (UTM) coordinate system. To improve interpretation we convert the UTM distance units from meters to kilometers.
+We'll reproject the geographic coordinates (i.e., longitude and latitude) to a coordinate system that provides more familiar distance units and reduces spatial distortion. Here we selected Universal Transverse Mercator (UTM) coordinate system (with km distance units). 
 
 ```{r, reproject_coords}
-##Promote coords to a sp package SpatialPoints object.
-coordinates(coords) <- ~lon+lat
+##Convert coords to spatial points and reproject.
+coordinates(coords) <- ~lon + lat
 proj4string(coords) <- "+proj=longlat +datum=WGS84"
-coords.utm <- spTransform(coords, CRS("+proj=utm +zone=13 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"))
-coords.utm <- coordinates(coords.utm)/1000
 
-##Changes the sp object coords back to a matrix for later.
+coords.utm <- spTransform(coords, CRS("+proj=utm +zone=13 +ellps=WGS84 +datum=WGS84 +units=km +no_defs"))
+coords.utm <- coordinates(coords.utm)
+
+##Convert spatial points to matrix for later mapping.
 coords <- coordinates(coords)
 ```
 
-Next let's take a look at the regression model residuals, assess their spatial independence, and start thinking about variogram and covaraince parameters.
+Next let's take a look at the regression model residuals, assess their spatial independence, and start thinking about variogram and covariance parameters.
 ```{r, plot_variograms, fig.align="center", fig.width=10, message=FALSE}
 d.max <- max(iDist(coords.utm))
 d.max
@@ -91,7 +92,7 @@ plot(v.resid, xlab="Distance (km)")
 
 It is also very helpful to create an interpolated surface of the model residuals to further assess spatial structure and potentially identify missing covariates.
 
-```{r, map_residuals}
+```{r, map_residuals, warning=FALSE}
 resid.surf <- mba.surf(cbind(coords, resid(lm.obj)), no.X=200, no.Y=200, extend=TRUE, sp=TRUE)$xyz.est
 
 proj4string(resid.surf) <- "+proj=longlat +datum=WGS84"
@@ -111,7 +112,7 @@ base.map %>%
 ```
 
 ### Fit some spatial regression models
-There's substantial evidence of residual spatial structure, so let's fit some models with spatially-structured random effects. First we'll fit the `bayesGeostatExact` model then the `spLM` model both from the `spBayes` package. 
+There's substantial evidence of residual spatial structure, so let's fit some models with spatially-structured random effects. First we'll fit the `bayesGeostatExact()` model then the `spLM()` model both from the `spBayes` package. 
 
 ```{r, fig.align="center"}
 n.samples <- 5000
@@ -120,7 +121,7 @@ n <- length(temp)
 p <- 3 ##Intercept and spatial locations
 
 phi <- 3/200
-alpha <- 1/12
+alpha <- 1/12 #tau^2/sigma^2
 
 beta.prior.mean <- as.matrix(rep(0, times=p))
 beta.prior.precision <- matrix(0, nrow=p, ncol=p)
@@ -141,7 +142,7 @@ plot(m.exact$p.samples, density=FALSE)
 
 ```
 
-Now let's fit the full Bayesian model using `spLM`.
+Now let's fit the full Bayesian model using `spLM()`.
 
 ```{r, fit_spLM, fig.align="center", fig.width=10}
 
@@ -160,7 +161,7 @@ m.1 <- spLM(temp ~ coords, coords=coords.utm, starting=starting,
 plot(m.1$p.theta.samples)
 ```
 
-The `spLM` function only updates the covariance parameters. The regression coefficients $\beta$'s and spatial random effects $w$ are recovered via the `spRecover` function that performs composition sampling using post burn-in samples.
+The `spLM()` function only updates the covariance parameters. The regression coefficients $\beta$'s and spatial random effects $w$ are recovered via the `spRecover()` function that performs composition sampling using post burn-in samples.
 ```{r, recover_params}
 burn.in <- floor(0.75*n.samples)
 
@@ -176,21 +177,21 @@ Now let's take a look at the estimates of the random effects compared with the n
 ```{r, map_random_effects}
 quants <- function(x){quantile(x, prob=c(0.5,0.025,0.975))}
 
-##random effects from bayesGeostatExact
+##Random effects from bayesGeostatExact()
 w.exact.summary <- apply(m.exact$sp.effects, 1, quants)
 
 w.exact.surf <- mba.surf(cbind(coords, w.exact.summary[1,]), no.X=200, no.Y=200, extend=TRUE, sp=TRUE)$xyz.est
 proj4string(w.exact.surf) <- "+proj=longlat +datum=WGS84"
 w.exact.surf <- raster(w.exact.surf)
 
-##random effects from spLM
+##Random effects from spLM()
 w.m1.summary <- apply(m.1$p.w.recover.samples, 1, quants)
 
 w.m1.surf <- mba.surf(cbind(coords, w.m1.summary[1,]), no.X=200, no.Y=200, extend=TRUE, sp=TRUE)$xyz.est
 proj4string(w.m1.surf) <- "+proj=longlat +datum=WGS84"
 w.m1.surf <- raster(w.m1.surf)
 
-##make the color ramp
+##Make the color ramp
 all.values <- c(values(w.exact.surf), values(w.m1.surf), values(resid.surf))
 pal <- colorNumeric(blue.red, all.values, na.color = "transparent")
 
@@ -207,7 +208,7 @@ base.map %>%
 
 ```
 
-Looks like the spatial random effects are picking up the effect of elevation so let's just put it in the mean and refit the non-spatial and `spLM` models.
+Looks like the spatial random effects are picking up the effect of elevation so let's just put it in the mean and refit the non-spatial and `spLM()` models.
 
 ```{r, fit_lm_with_elev_and_variogram, fig.align="center"}
 lm.obj <- lm(temp ~ elev + lon + lat, data=data.frame(coords))
@@ -217,7 +218,7 @@ v <- variog(coords=coords.utm, data=resid(lm.obj), uvec=(seq(0, 0.75*d.max, leng
 plot(v, xlab="Distance (km)")
 ```
 
-Now call `spLM` with elevation as a covariate after adjusting the variance priors then recover the parameters via the `spRecover` function.
+Now call `spLM()` with elevation as a covariate after adjusting the variance priors then recover the parameters via the `spRecover()` function.
 ```{r, refit_spLM_with_elev}
 priors$sigma.sq.IG <- c(2, 1)
 priors$tau.sq.IG <- c(2, 1)
@@ -247,7 +248,7 @@ base.map %>%
     addRasterImage(w.m2.surf, colors = pal.2, opacity = 0.75, group="spLM m.2") %>%
     addRasterImage(w.m1.surf, colors = pal, opacity = 0.75, group="spLM m.1") %>%
     addRasterImage(resid.surf, colors = pal, opacity = 0.75, group="Regression residuals") %>%
-    addLegend("bottomleft", pal = pal.2, values = values(w.m2.surf), opacity = 0.75, title = "<center>Random effects (m.2) &<br>Regression<br>residuals</center>") %>%
+    addLegend("bottomleft", pal = pal.2, values = values(w.m2.surf), opacity = 0.75, title = "<center>Random effects (m.2)</center>") %>%
     addLegend("bottomright", pal = pal, values = all.values, opacity = 0.75, title = "<center>Random effects (m.1) &<br>Regression<br>residuals</center>") %>%
     addLayersControl(
         baseGroup = c("Terrain", "Satellite"),
@@ -258,7 +259,7 @@ base.map %>%
 
 ###Prediction
 
-Recall, our interest is in creating a temperature surface with associated uncertainty. This is done by sampling from posterior predictive distributions at 17,545 new locations across Colorado. These prediction locations are held in `pred.coords` with spatially coinciding elevation in `pred.elev`. Sampling is done using the `spPredict` function. Ideally, we would draw more posterior predictive samples, but in the interest of time we take only a small sample to generate the summary statistics and maps. Using more CPU would greatly increase prediction speed.
+Recall, our interest is in creating a temperature surface with associated uncertainty. This is done by sampling from posterior predictive distributions at 17,545 new locations across Colorado. These prediction locations are held in `pred.coords` with spatially coinciding elevation in `pred.elev`. Sampling is done using the `spPredict()` function. Ideally, we would draw more posterior predictive samples, but in the interest of time we take only a small sample to generate the summary statistics and maps. Using more CPU would greatly increase prediction speed.
 
 ```{r, spPredict}
 pred.X <- cbind(1, pred.elev, pred.coords)

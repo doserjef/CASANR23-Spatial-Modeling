@@ -1,6 +1,6 @@
 #' ---
 #' title: "Modeling tree distributions across Vermont"
-#' author: "Andrew O. Finley and Jeffrey W. Doser"
+#' author: "Jeffrey W. Doser and Andrew O. Finley"
 #' date: "May 15, 2023"
 #' output: html_document
 #' bibliography: [references.bib]
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 #' 
 #' # Introduction
 #' 
-#' In this execersice, we will model the distributions of the ten most common tree species in Vermont, USA. Our goal is to predict distributions (i.e., probability of occurrence) of the ten species at a fine resolution across the state. We will use data from the US Forest Service Forest Inventory and Analysis (FIA) program, which collects inventory data on forest resources across the US for a variety of applications, such as assessments of current carbon stock and flux, projections of forest change, natural resource planning, and climate change policies. FIA maintains over 300,000 plots across the US for varying objectives, which were selected through a quasi-systematic sampling design [@bechtold2005enhanced]. Here our data set is relatively modest in size, with $m = 10$ species (i.e., responses) and $n = 688$ forest plots. Note a small amount of noise is added to the true spatial location of the forest plots to ensure confidentiality of the locations. As our interest is in modeling tree distributions, we will work with presence/absence data of each species at each site. Because we have a fairly large number of species, we will use a factor modeling dimension reduction approach to jointly model the distributions of each species.
+#' In this exercise, we will model the distributions of the ten most common tree species in Vermont, USA. Our goal is to predict distributions (i.e., probability of occurrence) of the ten species at a fine resolution across the state. We will use data from the US Forest Service Forest Inventory and Analysis (FIA) program, which collects inventory data on forest resources across the US for a variety of applications, such as assessments of current carbon stock and flux, projections of forest change, natural resource planning, and climate change policies. FIA maintains over 300,000 plots across the US for varying objectives, which were selected through a quasi-systematic sampling design [@bechtold2005enhanced]. Here our data set is relatively modest in size, with $h = 10$ species (i.e., responses) and $n = 688$ forest plots. Note a small amount of noise is added to the true spatial location of the forest plots to ensure confidentiality of the locations. As our interest is in modeling tree distributions, we will work with presence/absence data of each species at each site. Because we have a fairly large number of species, we will use a factor modeling dimension reduction approach to jointly model the distributions of each species.
 #' 
 #' Given our binary response variable, we will fit spatial factor models using a GLMM framwork with a logit link function, employing  data augmentation to yield an efficient MCMC sampler [@polson2013]. We will fit such models with the `sfJSDM` function in the `spOccupancy` R package [@doser2022spoccupancy]. The `sf` stands for spatial factor and the `JSDM` stands for "Joint Species Distribution Model", which is what joint models of species distributions are called in the ecological literature. We first load `spOccupancy` below, as well as a few other packages we will use for generating maps and other summaries of the model
 #' 
@@ -50,12 +50,12 @@ str(data.list)
 #' Let's first generate some EDA plots of the observed presence/absence data for each species
 #' 
 ## ---- fig.cap = 'Observed presence/absence of the ten species across Vermont', fig.fullwidth = TRUE, fig.align = 'center'----
-m <- length(sp.names)
+h <- length(sp.names)
 n <- nrow(data.list$coords)
 my.crs <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=km +no_defs"
 plot.df <- data.frame(val = c(t(data.list$y)),
-                      x = rep(data.list$coords[, 1], times = m),
-                      y = rep(data.list$coords[, 2], times = m),
+                      x = rep(data.list$coords[, 1], times = h),
+                      y = rep(data.list$coords[, 2], times = h),
                       species = factor(rep(sp.names, each = n)))
 plot.df$val <- factor(ifelse(plot.df$val == 1, 'Present', 'Absent'))
 plot.sf <- st_as_sf(plot.df, coords = c('x', 'y'), 
@@ -127,8 +127,9 @@ priors <- list(beta.comm.normal = list(mean = 0, var = 2.72), # Prior on hyper-m
                tau.sq.beta.ig = list(a = 0.1, b = 0.1), # Prior for hyper-variances
                phi.unif = list(3 / upper.dist, 3 / lower.dist))
 # Set initial values
-lambda.inits <- matrix(0, nrow(data.list$y), n.factors)
+lambda.inits <- matrix(0, h, n.factors)
 diag(lambda.inits) <- 1
+lambda.inits
 inits <- list(beta.comm = 0, tau.sq.beta = 1, phi = 3 / 100,
               lambda = lambda.inits)
 

@@ -1,17 +1,4 @@
-#' ---
-#' title: "Simulated data and forest canopy height analyses"
-#' output: html_document
-#' ---
-#' 
-## ----global_options, echo=FALSE------------------------------------------
-knitr::opts_chunk$set(comment = NA, tidy = TRUE)
-
-#' 
-#' 
-#' # Simulated data analysis
-#' 
-#' ## Make some data
-## ------------------------------------------------------------------------
+## ----simulate_data------------------------------------------------------------
 rmvn <- function(n, mu=0, V = matrix(1)){
   p <- length(mu)
   if(any(is.na(match(dim(V),p))))
@@ -37,9 +24,8 @@ R <- exp(-phi*D)
 w <- rmvn(1, rep(0,n), sigma.sq*R)
 y <- rnorm(n, x%*%B + w, sqrt(tau.sq))
 
-#' 
-#' ## Fit a Sequential NNGP model
-## ---- fig.align="center", message=FALSE----------------------------------
+
+## ----fit_latent_nngp, fig.align="center", message=FALSE-----------------------
 library(spNNGP)
 
 n.samples <- 500
@@ -52,44 +38,42 @@ priors <- list("phi.Unif"=c(3/1, 3/0.01), "sigma.sq.IG"=c(2, 5), "tau.sq.IG"=c(2
 
 cov.model <- "exponential"
 
-m.s <- spNNGP(y~x-1, coords=coords, starting=starting, method="sequential", n.neighbors=5,
+m.s <- spNNGP(y~x-1, coords=coords, starting=starting, method="latent", n.neighbors=5,
               tuning=tuning, priors=priors, cov.model=cov.model,
-              n.samples=n.samples, return.neighbors = TRUE, n.omp.threads=2)
+              n.samples=n.samples, return.neighbor.info=TRUE, n.omp.threads=2)
 
 round(summary(m.s$p.beta.samples)$quantiles[,c(3,1,5)],2)
 round(summary(m.s$p.theta.samples)$quantiles[,c(3,1,5)],2)
 plot(w, apply(m.s$p.w.samples, 1, median),  xlab="True w", ylab="Posterior median w")
 
-#' 
-#' Take a look at the neighbor ordering (just for fun)
-## ------------------------------------------------------------------------
+
+## ----look_at_neighbor_info----------------------------------------------------
+names(m.s$neighbor.info)
+ord <- m.s$neighbor.info$ord
+n.indx <- m.s$neighbor.info$n.indx
+
 s <- 50
-plot(m.s$coords.ord, xlab="Easting", ylab="Northing")
-points(m.s$coords.ord[s,,drop=FALSE], cex=2, col="red")
-points(m.s$coords.ord[m.s$n.indx[[s]],,drop=FALSE], pch=19, col="blue")
-abline(v=m.s$coords.ord[s,1], lty=3)
+plot(m.s$coords[ord,], xlab="Easting", ylab="Northing")
+points(m.s$coords[ord,][s,,drop=FALSE], cex=2, col="red")
+points(m.s$coords[ord,][n.indx[[s]],,drop=FALSE], pch=19, col="blue")
+abline(v=m.s$coords[ord,][s,1], lty=3)
 
 #for(s in 2:n){
-#  plot(m.s$coords.ord, xlab="Easting", ylab="Northing")
-#  points(m.s$coords.ord[s,,drop=FALSE], cex=2, col="red")
-#  points(m.s$coords.ord[m.s$n.indx[[s]],,drop=FALSE], pch=19, col="blue")
-#  abline(v=m.s$coords.ord[s,1], lty=3)
+#  plot(m.s$coords[ord,], xlab="Easting", ylab="Northing")
+#  points(m.s$coords[ord,][s,,drop=FALSE], cex=2, col="red")
+#  points(m.s$coords[ord,][n.indx[[s]],,drop=FALSE], pch=19, col="blue")
+#  abline(v=m.s$coords[ord,][s,1], lty=3)
 #  readline(prompt = "Pause. Press <Enter> to continue...")
 #}
 
 
-#' 
-#' # Harvard Forest canopy height analysis
-#' 
-#' Here we consider forest canopy height (m) data measured using the NASA Goddard's LiDAR Hyperspectral and Thermal (G-LiHT) Airborne Imager over a subset of Harvard Forest Simes Tract, MA, collected in Summer 2012. This is a sampling LiDAR system that only records strips of canopy height across the landscape. We would like to use the Harvard Forest data to assess if the current density of LiDAR measurements can be reduced, which would allow for wider strips to be collected. Ultimately, interest is in creating wall-to-wall maps of forest canopy height with associated uncertainty.
-#' 
-#' Let's load the necessary packages and canopy height data which are part of the `spNNGP` package. Here too, we subset the data and divide it into a model and testing set.
-## ---- message=FALSE------------------------------------------------------
+
+## ----harvard_forest_data, message=FALSE---------------------------------------
 library(geoR)
 library(raster)
 library(leaflet)
 
-data(CHM)
+load("CHM.rda")
 
 CHM <- CHM[CHM[,3]>0,]
 
@@ -100,10 +84,8 @@ ho <- sample((1:nrow(CHM))[-mod], 10000)
 CHM.mod <- CHM[mod,]
 CHM.ho <- CHM[ho,]
 
-#' 
-#' Let's again start with a `leaflet` basemap then overlay the canopy height data. Recall, `leaflet` maps expect data to be in geographic coordinate system (i.e., longitude and latitude), so we first need reproject the CHM data (just for visualization purposes, we'll fit the model using the projected coordinates).
-#' 
-## ------------------------------------------------------------------------
+
+## ----reproject_and_map, warning=FALSE-----------------------------------------
 chm.r <- rasterFromXYZ(CHM)
 proj4string(chm.r) <- "+proj=utm +zone=18 +datum=WGS84 +units=m +no_defs +ellps=WGS84 +towgs84=0,0,0"
 chm.r.ll <- projectRaster(chm.r, crs="+proj=longlat +datum=WGS84")
@@ -123,20 +105,17 @@ base.map %>%
         options = layersControlOptions(collapsed = FALSE)
     )
 
-#' 
-#' Let's try and fit a variogram to the data to get a sense of the spatial structure. These `variog` function calculates the $n\times n$ Euclidean distance matrix to construct the empirical variogram. When $n$ is large this will you will likely run out of memory, so you might need to consider only a subset of your data.
-#' 
-## ---- fig.align="center"-------------------------------------------------
+
+## ----variogram_eda, fig.align="center"----------------------------------------
 sub <- 1:10000
 
-#note, max intesite distance is ~1.5km
+#note, max intersite distance is ~1.5km
 v <- variog(coords=CHM.mod[sub,1:2], data=CHM.mod[sub,3], uvec=(seq(0, 500, length=30))) 
 
 plot(v, xlab="Distance (m)")
 
-#' 
-#' Now let's fit some spatial regression models using NNGP random effects.
-## ------------------------------------------------------------------------
+
+## ----fit_response_nngp--------------------------------------------------------
 n.samples <- 1000
 
 starting <- list("phi"=3/50, "sigma.sq"=15, "tau.sq"=2.5)
@@ -161,18 +140,14 @@ plot(m.r$p.theta.samples)
 m.r$run.time
 
 
-#' 
-#' Now prediction for the holdout set. 
-#' 
-## ---- fig.align="center"-------------------------------------------------
+
+## ----predict_for_holdout, fig.align="center"----------------------------------
 burn.in <- floor(0.5*n.samples)
 
-p.r <- spPredict(m.r, X.0 = as.matrix(rep(1,nrow(CHM.ho))), coords.0 = CHM.ho[,c("x","y")],
-                 start=burn.in, thin=2, n.report=5000, n.omp.threads=2)
+p.r <- predict(m.r, X.0 = as.matrix(rep(1,nrow(CHM.ho))), coords.0 = CHM.ho[,c("x","y")],
+                 sub.sample=list(start=burn.in, thin=2), n.report=5000, n.omp.threads=2)
 
 y.hat.r <- apply(p.r$p.y.0, 1, mean)
 
 plot(CHM.ho[,3], y.hat.r, main="Response NNGP model", xlab="True canopy height", ylab="Posterior predictive distribution mean")
 
-#' 
-#' 

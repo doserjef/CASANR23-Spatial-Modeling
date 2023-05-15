@@ -1,6 +1,6 @@
 #' ---
 #' title: "Spatially-varying trends in Eastern Wood-pewee occurrence from 2010-2019"
-#' author: "Andrew O. Finley and Jeffrey W. Doser"
+#' author: "Jeffrey W. Doser and Andrew O. Finley"
 #' date: "May 15, 2023"
 #' output: html_document
 #' bibliography: [references.bib]
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 #' 
 #' # Introduction
 #' 
-#' In this exercise, our goal is to fit a spatially-varying coefficient model to assess if there is any spatial variation in a ten-year (2010-2019) occurrence trend of the Eastern Wood-pewee across the eastern US. We will fit a model that explicitly accommodates observational biases that occur when collecting data on many wildlife species (i.e., imperfect detection, or failing to observe a species at a location when it is truly present). The data we use come from the North American Breeding Bird Survey, in which trained volunteers count the number of birds, identified to species, at approximately 3000 locations (called "routes") across North America each year since the 1960s. Here we use presence/absence data from $n = 500$ sites acrosss the eastern US that are within the known distribution of the Eastern Wood-pewee, which are surveyed varying amounts over a ten year period from 2010-2019. At each site during each year it is sampled, we use data from $K = 5$ replicate surveys. We assume the true presence/absence status of the bird at a given location does not change over the 5 replicate surveys, and that any variation in the data across the replicate surveys is related to observational error. In the wildlife ecology literature, this type of zero-inflated mixture model is referred to as an "occupancy model".
+#' In this exercise, our goal is to fit a spatially-varying coefficient model to assess if there is any spatial variation in a ten-year (2010-2019) occurrence trend of the Eastern Wood-pewee across the eastern US. We will fit a model that explicitly accommodates observational biases that occur when collecting data on many wildlife species (i.e., imperfect detection, or failing to observe a species at a location when it is truly present). The data we use come from the North American Breeding Bird Survey, in which trained volunteers count the number of birds, identified to species, at approximately 3000 locations (called "routes") across North America each year since the 1960s. Here we use presence/absence data from $n = 500$ sites across the eastern US that are within the known distribution of the Eastern Wood-pewee, which are surveyed varying amounts over a ten year period from 2010-2019. At each site during each year it is sampled, we use data from $K = 5$ replicate surveys. We assume the true presence/absence status of the bird at a given location does not change over the 5 replicate surveys, and that any variation in the data across the replicate surveys is related to observational error. In the wildlife ecology literature, this type of zero-inflated mixture model is referred to as an "occupancy model".
 #' 
 #' We will fit the model using the function `svcTPGOcc()` in the `spOccupancy` package, where the `svc` stands for spatially-varying coefficients, the `T` indicates we're fitting a model that has a temporal dimension to it, `PG` indicates we're using P&oacute;lya-Gamma data augmentation [@polson2013], and `Occ` stands for occupancy model. Below we first load the packages we will use in this example. 
 #' 
@@ -47,8 +47,8 @@ str(data.EAWP)
 ## ---- fig.align = 'center', message = FALSE-----------------------------------
 my.crs <- "+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +datum=NAD83 +units=km +no_defs"
 coords.sf <- st_as_sf(as.data.frame(data.EAWP$coords),
-		      coords = c("X", "Y"),
-		      crs = my.crs)
+                      coords = c("X", "Y"),
+                      crs = my.crs)
 usa <- st_as_sf(maps::map("state", fill = TRUE, plot = FALSE))
 usa.no.states <- st_as_sf(maps::map("usa", fill = TRUE, plot = FALSE))
 # Restrict to east of the 100th meridian
@@ -62,10 +62,10 @@ east.us <- east.us %>%
   st_transform(st_crs(coords.sf))
 coords.sf$raw.prob <- apply(data.EAWP$y, 1, mean, na.rm = TRUE)
 ggplot(coords.sf) +
-    geom_sf(aes(col = raw.prob), size = 2) +
-    scale_color_viridis_c('', option = 'plasma', limits = c(0, 1)) +
-    geom_sf(data = east.us, fill = NA, color=alpha("black", 0.75)) +
-    theme_bw(base_size = 14)
+  geom_sf(aes(col = raw.prob), size = 2) +
+  scale_color_viridis_c('', option = 'plasma', limits = c(0, 1)) +
+  geom_sf(data = east.us, fill = NA, color=alpha("black", 0.75)) +
+  theme_bw(base_size = 14)
 
 #' 
 #' Below, we calculate the average proportion of times the species was observed at an average site each year
@@ -84,12 +84,12 @@ dist.bbs <- dist(data.EAWP$coords)
 low.dist <- quantile(dist.bbs, 0.10)
 max.dist <- max(dist.bbs)
 priors <- list(sigma.sq.ig = list(2, 1), # IG prior for spatial variances
-	       # Informative prior for spatial decay parameters
-	       phi.unif = list(3 / max.dist, 3 / low.dist),
-	       # Normal prior for occurrence coefficients
-	       beta.normal = list(mean = 0, var = 2.72), 
-	       # Normal prior for observational (detection) coefficients
-	       alpha.normal = list(mean = 0, var = 2.72))
+               # Informative prior for spatial decay parameters
+               phi.unif = list(3 / max.dist, 3 / low.dist),
+               # Normal prior for occurrence coefficients
+               beta.normal = list(mean = 0, var = 2.72), 
+               # Normal prior for observational (detection) coefficients
+               alpha.normal = list(mean = 0, var = 2.72))
 
 #' 
 #' Here we will again use an exponential spatial covariance model, so notice that our prior for the spatial decay parameters $\phi$ restricts the effective spatial range to fall between the maximum intersite distance and the 10% quantile of the intersite distances. We use our usual inverse-Gamma prior for the spatial variances and Gaussian priors for the regression coefficients.
